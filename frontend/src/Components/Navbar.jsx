@@ -10,6 +10,7 @@ const Navbar = () => {
                 <p className='text-3xl text-white font-bold ml-24'>Sri Lanka Railway</p>
 
             </div>
+            
 
         </div>
     </div>
