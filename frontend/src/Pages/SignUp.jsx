@@ -1,22 +1,85 @@
-import React from 'react'
+import React, { useState } from 'react'
+import PasswordInput from '../Components/Input/PasswordInput'
+import {Link, useNavigate} from 'react-router-dom';
 
 const SignUp = () => {
+
+  const [firstName, setFirstName]=useState("");
+  const [lastName, setLastName]=useState("");
+  const [email, setEmail]=useState("");
+  const [password, setPassword]=useState("");
+  const [error, setError]=useState(null);
+  //const navigate=useNavigate();
+  
+
+  const handleSignUp= async (e)=>{
+    e.preventDefault();
+
+    if(!firstName){
+      setError("Please enter your first name");
+      return
+    }
+    
+    if(!lastName){
+      setError("Please enter your last name");
+      return
+    }
+
+    if(!email){
+      setError("Please enter your email");
+      return
+    }
+    if(!password){
+      setError("Please enter your password");
+      return
+    }
+    setError("");
+
+    //Signup api call
+
+  };
+
   return (
     <div>
         <div className='flex justify-center items-center'>
-            <form className='bg-[#F7F2F2] bg-opacity-60 border rounded-lg px-16 py-10 mt-16 drop-shadow-lg'>
-                <h1 className='text-center text-xl font-semibold text-purple-700'>Sign up here</h1>
+          <div className='bg-[#F7F2F2] bg-opacity-60 border rounded-lg px-16 py-10 mt-16 outline-none'>
+            <form onSubmit={handleSignUp}>
+                <h1 className='text-center text-xl font-semibold text-purple-950'>Sign up here</h1>
                 <div className='flex flex-col'>
-                <input type='text' name='fname' placeholder='First Name' className='text-md px-2 py-2 rounded-md border border-gray-300 mt-8 w-96'/>
-                <input type='text' name='lname' placeholder='Last Name' className='text-md px-2 py-2 rounded-md border border-gray-300 mt-4 w-96'/>
-                <input type='text' name='semail' placeholder='Email' className='text-md px-2 py-2 rounded-md border border-gray-300 mt-4 w-96'/>
-                <input type='text' name='spassword' placeholder='Password' className='text-md px-2 py-2 rounded-md border border-gray-300 mt-4 w-96'/>
-                <input type='text' name='scpassword' placeholder='Confirm password' className='text-md px-2 py-2 rounded-md border border-gray-300 mt-4 w-96'/>
-                <button className='text-center text-lg font-sans bg-green-600 px-4 py-1 rounded-lg  text-white mt-8 hover:bg-green-500'>Sign Up</button>
+                <input 
+                type='text'
+                 placeholder='First Name' 
+                 className='input-box mt-7'
+                 value={firstName}
+                 onChange={(e)=>{setFirstName(e.target.value)}}
+                 />
+
+                <input 
+                 type='text'
+                 placeholder='Last Name' 
+                 className='input-box'
+                 value={lastName}
+                 onChange={(e)=>{setLastName(e.target.value)}}
+                 />
+                <input type='text'
+                 placeholder='Email' 
+                 className='input-box'
+                 value={email}
+                 onChange={(e)=>{setEmail(e.target.value)}}
+                 />
+                <PasswordInput
+                value={password}
+                onChange={(e)=>{setPassword(e.target.value)}}
+
+                />
+                {error && <p className='text-sm text-red-500 text-center'>{error}</p>}
+                <button type="submit" className='text-center text-base bg-green-600 px-4 py-2 rounded-lg  text-white mt-5 hover:bg-green-500'>Sign Up</button>
                 <p className='text-center text-lg font-sans mt-4'>I have an account</p>
-                <button className='text-center text-white font-sans text-lg bg-blue-700 px-2 py-1 rounded-lg mt-4 w-[200px] mx-auto hover:bg-blue-800'>Login</button>
+                <Link to="/login"> <button className='flex justify-center text-center text-white font-sans text-lg bg-blue-700 px-2 py-1 rounded-lg mt-4 w-[200px] mx-auto hover:bg-blue-800'>Login</button>
+                </Link>
                 </div>
             </form>
+            </div>
          
         </div>
     </div>
