@@ -1,16 +1,24 @@
 import React from 'react'
-import Navbar from './Components/Navbar'
-import Footer from './Components/Footer'
-import LandingPage from './Pages/LandingPage'
+import Navbar from './Components/Navbar/Navbar'
+import Footer from './Components/Footer/Footer'
+import Login from './Pages/Login'
 import SignUp from './Pages/SignUp'
+import Home from './Pages/Home'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 const App = () => {
   return (
-    <main className='overflow-hidden'>
+    <div>
       <Navbar/>
-      <SignUp/>
+      <Router>
+        <Routes>
+          <Route path='/' element={<Home/>}/>
+          <Route path='/login' element={<Login/>}/>
+          <Route path='/signup' element={<SignUp/>}/>
+        </Routes>
+      </Router>
       <Footer/>
-    </main>
+    </div>
   )
 }
 
