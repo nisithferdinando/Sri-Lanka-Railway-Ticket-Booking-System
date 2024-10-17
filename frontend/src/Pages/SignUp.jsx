@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import PasswordInput from '../Components/Input/PasswordInput'
 import {Link, useNavigate} from 'react-router-dom';
+import { validateEmail } from '../Utilities/Helper';
+import axiosInstance from '../Utilities/axiosInstance'
 
 const SignUp = () => {
 
@@ -9,7 +11,7 @@ const SignUp = () => {
   const [email, setEmail]=useState("");
   const [password, setPassword]=useState("");
   const [error, setError]=useState(null);
-  //const navigate=useNavigate();
+  const navigate=useNavigate();
   
 
   const handleSignUp= async (e)=>{
@@ -25,7 +27,7 @@ const SignUp = () => {
       return
     }
 
-    if(!email){
+    if(!validateEmail(email)){
       setError("Please enter your email");
       return
     }
@@ -36,6 +38,27 @@ const SignUp = () => {
     setError("");
 
     //Signup api call
+
+    try{
+       const response= await axiosInstance.post("/api/auth/signup",
+        {
+          firstName,
+          lastName,
+          email,
+          password,
+        }
+       );
+      
+       localStorage.setItem("token", response.data.token);
+       navigate('/home');
+
+    }
+
+    catch(error){
+
+      setError(error.response?.data?.message || "Sign up error" )
+
+    }
 
   };
 
