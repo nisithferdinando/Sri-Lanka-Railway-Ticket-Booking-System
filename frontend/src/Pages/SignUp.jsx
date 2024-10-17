@@ -48,7 +48,7 @@ const SignUp = () => {
           password,
         }
        );
-      
+       localStorage.setItem("userName", `${response.data.firstName}`);
        localStorage.setItem("token", response.data.token);
        navigate('/home');
 
