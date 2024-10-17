@@ -1,13 +1,26 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TbWorld } from "react-icons/tb";
 import { Station } from '../Utilities/trainData';
 import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const navigate = useNavigate();
+  const [userName, setUserName] = useState('');
+  useEffect(() => {
+
+    const storedUserName = localStorage.getItem('userName');
+
+    if (storedUserName) {
+
+      setUserName(storedUserName);
+
+    }
+
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+     localStorage.removeItem('userName');
 
     navigate('/login');
   };
@@ -16,7 +29,7 @@ const Home = () => {
     <div>
       <div className='w-full'>
         <div className='flex justify-end mt-4 mr-24 gap-4 items-center'>
-          <p className='text-lg font-sans text-blue-500 underline cursor-pointer hover:text-blue-400'>Account</p>
+          <p className='text-lg font-sans text-blue-500 underline cursor-pointer hover:text-blue-400'>{userName}</p>
           <p className='text-lg font-sans text-blue-500 cursor-pointer' onClick={handleLogout}>Logout</p>
           <div className='flex justify-center items-center gap-2 cursor-pointer'>
             <TbWorld size={24} />
