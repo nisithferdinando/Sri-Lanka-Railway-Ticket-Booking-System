@@ -3,6 +3,8 @@ import PasswordInput from '../Components/Input/PasswordInput'
 import {Link, useNavigate} from 'react-router-dom';
 import { validateEmail } from '../Utilities/Helper';
 import axiosInstance from '../Utilities/axiosInstance'
+import Navbar from '../Components/Navbar/Navbar';
+import Footer from '../Components/Footer/Footer';
 
 const SignUp = () => {
 
@@ -64,8 +66,9 @@ const SignUp = () => {
 
   return (
     <div>
+      <Navbar/>
         <div className='flex justify-center items-center'>
-          <div className='bg-[#F7F2F2] bg-opacity-60 border rounded-lg px-16 py-10 mt-16 outline-none'>
+          <div className='bg-[#F7F2F2] bg-opacity-60 border rounded-lg px-16 py-11 mt-20 outline-none'>
             <form onSubmit={handleSignUp}>
                 <h1 className='text-center text-xl font-semibold text-purple-950'>Sign up here</h1>
                 <div className='flex flex-col'>
@@ -104,6 +107,9 @@ const SignUp = () => {
             </form>
             </div>
          
+        </div>
+        <div className='mt-20'>
+        <Footer/>
         </div>
     </div>
   )

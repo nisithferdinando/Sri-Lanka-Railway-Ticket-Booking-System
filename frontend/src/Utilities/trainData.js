@@ -9,7 +9,7 @@ export const Station = [
     "Galle"
 ];
 
-const Trains=[
+export const Trains=[
     {
         id:1,
         name:"1025-Udarata Menike",
