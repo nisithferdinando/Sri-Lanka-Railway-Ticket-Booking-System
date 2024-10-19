@@ -16,7 +16,7 @@ app.use(express.json());
 
 
 app.use('/api/auth',authRoutes);
-app.use(trainRoutes);
+app.use('/api/trains', trainRoutes); 
 
 const PORT= process.env.PORT || 8000;
 app.listen(PORT);

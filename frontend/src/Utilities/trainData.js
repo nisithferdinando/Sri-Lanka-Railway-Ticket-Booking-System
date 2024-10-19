@@ -3,27 +3,20 @@ export const Station = [
 
     "Colombo Fort",
     "Maradana",
-    "Peliyagoda",
-    "Polgahawela",
-    "Matara",
-    "Galle"
+    "Kandy",
+    "Nuwara Eliya",
+    "Haputhale",
+    "Badulla",
+    "Ella",
 ];
 
-export const Trains=[
-    {
-        id:1,
-        name:"1025-Udarata Menike",
-        routeName:"Colombo-Badulla",
-        route:["Colombo Fort, Maradana, Peliyagoda, Polgahawela, Matara"],
-        travelDays:["Monday", "Wednesday"],
-    },
-    {
-        id:2,
-        name:"1025-Podi Menike",
-        routeName:"Colombo-Badulla",
-        route:["Colombo Fort, Maradana, Peliyagoda, Polgahawela, Matara"],
-        travelDays:["Monday", "Wednesday", "Sunday"],
-    },
-];
+ export const Stationsin=[
+    "කොළඹ කාටුනායක",
+    "මාරදන",
+    "පෙළියගොඩ",
+    "පොල්ගහවෙල",
+    "මත්තර",
+    "බදුල්ල",
+ ];
 
 export default Station;
