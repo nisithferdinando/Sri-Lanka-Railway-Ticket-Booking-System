@@ -87,12 +87,12 @@ const HomeS = () => {
 
     const columns = [
       //{ field: 'id', headerName: 'ID', width: 90 },
-      { field: 'trainNameS', headerName: 'Train Name', width: 150 },
-       { field: 'startStationS', headerName: 'Start', width: 200 },
+      { field: 'trainNameS', headerName: 'දුම්රිය', width: 200 },
+       { field: 'startS', headerName: 'ආරම්භය', width: 150 },
 
-     {field:'departs', headerName:"Departs", width:150},
+     {field:'departs', headerName:"පිටවීම", width:150},
 
-     {field:'arrives', headerName:"Arrives", width:150},
+     {field:'arrives', headerName:"පැමිණීම", width:150},
       
     ];
 
@@ -113,7 +113,7 @@ const HomeS = () => {
         <div className='flex items-center justify-center mt-12 flex-col'>
           <div className='md:w-[650px] border-[1px] bg-white drop-shadow-md px-5 py-11'>
             <form onSubmit={handleSearch}>
-              <p className='text-center text-xl font-semibold text-slate-800'> දුම්රිය සොයන්න</p>
+              <p className='text-center text-xl font-semibold text-slate-800'> දුම්රිය සෙවීම</p>
               <div className='grid md:grid-cols-2 mt-10 pl-4 xs:grid-cols-1 justify-center'>
                 <div className='flex flex-col py-2'>
                   <p className='text-black text-lg font-medium'>ආරම්භය</p>
@@ -127,9 +127,9 @@ const HomeS = () => {
                   </select>
                 </div>
                 <div className='flex flex-col py-2'>
-                  <p className='text-black text-lg'>අවසානය</p>
+                  <p className='text-black text-lg'>ගමනාන්තය</p>
                   <select className='w-64 mt-4 input-box' value={endStationS} onChange={(e)=>setEndStationS(e.target.value)}>
-                  <option value="" disabled>අවසාන ස්ථානය තෝරන්න</option>
+                  <option value="" disabled>ගමනාන්තය තෝරන්න</option>
                     {Stationsin.map((station) => (
                       <option key={station} value={station}>
                         {station}
@@ -149,10 +149,10 @@ const HomeS = () => {
               {error && <p className='text-red-600 text-center mt-2'>{error}</p>}
               <div className='flex flex-row ml-4 gap-x-7 mt-8 justify-center md:justify-start'>
                 <button type='submit' className='text-white px-5 py-2 text-sm bg-blue-700 rounded hover:bg-blue-600'>
-                ඉදිරිපත් කරන්න
+                සොයන්න
                 </button>
                 <button type='reset' className='text-white px-5 py-2 text-sm bg-slate-900 rounded hover:bg-slate-800'>
-                නැවත පිහිටුවන්න
+                නැවත සකසන්න
                 </button>
               </div>
             </form>
