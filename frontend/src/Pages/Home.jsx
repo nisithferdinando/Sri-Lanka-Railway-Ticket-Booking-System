@@ -85,9 +85,9 @@ const Home = () => {
 
     const columns = [
       
-      { field: 'trainName', headerName: 'Train Name', width: 150 },
+      { field: 'trainName', headerName: 'Train Name', width: 200 },
 
-       { field: 'start', headerName: 'Start', width: 200 },
+       { field: 'start', headerName: 'Start', width: 150 },
 
       {field:'departs', headerName:"Departs", width:150},
 
@@ -149,7 +149,7 @@ const Home = () => {
               {error && <p className='text-red-600 text-center mt-2'>{error}</p>}
               <div className='flex flex-row ml-4 gap-x-7 mt-8 justify-center md:justify-start'>
                 <button type='submit' className='text-white px-5 py-1 text-base bg-blue-700 rounded hover:bg-blue-600'>
-                  Submit
+                  Search
                 </button>
                 <button type='reset' className='text-white px-5 py-1 text-base bg-slate-900 rounded hover:bg-slate-800'>
                   Reset

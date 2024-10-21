@@ -36,6 +36,7 @@ router.post('/search', async (req, res) => {
             departs: train.departs,
             arrives: train.arrives,
             start: train.start,
+            
         }));
 
         res.json(response);
@@ -76,7 +77,7 @@ router.post('/search', async (req, res) => {
             compartments: train.compartments,
             departs: train.departs,
             arrives: train.arrives,
-            start: train.start,
+            startS: train.startS,
         }));
 
         res.json(response);
