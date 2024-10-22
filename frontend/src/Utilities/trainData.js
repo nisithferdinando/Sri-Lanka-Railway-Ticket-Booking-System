@@ -1,6 +1,6 @@
 
 export const Station = [
-    "Colombo Fort", "Ragama", "Gampaha", "Veyangoda", "Mirigama", 
+    "Colombo Fort", "Maradana", "Ragama", "Gampaha", "Veyangoda", "Mirigama", 
     "Polgahawela", "Rambukkana", "Ihalakotte", "Kadugannawa", "Peradeniya", 
     "Sarasaviuyana", "Kandy", "Gelioya", "Gampola", "Tembligala", 
     "Ulapane", "Nawalapitiya", "Inguruoya", "Galboda", "Watawala", 
@@ -13,7 +13,7 @@ export const Station = [
   
 
  export const Stationsin=[
-   "කොළඹ කොටුව", "රාගම", "ගම්පහ", "වේයන්ගොඩ","මීරිගම",
+   "කොළඹ කොටුව", "මරදාන","රාගම", "ගම්පහ", "වේයන්ගොඩ","මීරිගම",
    "පොල්ගහවෙල","රඹුක්කන","ඉහල කොට්ටේ", "කඩුගන්නාව","පේරාදෙනිය",
    "සරසවි උයන","මහනුවර","ගෙලිඔය", "ගම්පොළ", "තෙබිලිගල", "උලපනේ", 
    "නවලපිටිය", "ඉගුරුඔය", "ගල්බොඩ", "වටවල", "ඉහලවටවල", "රොස්ඇල්ල", 
