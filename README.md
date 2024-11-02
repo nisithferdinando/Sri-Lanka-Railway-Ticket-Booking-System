@@ -23,3 +23,10 @@ The **Train Ticket Booking System** is a web-based application that allows users
 - **Payment Gateway**: Integration with a payment provider for processing payments
 - **Version Control**: Git & GitHub for code management
 
+ ## Search 
+![Screenshot 2024-10-22 161220](https://github.com/user-attachments/assets/39f51ad9-27ff-4ae5-b522-91f6d3a0f357)
+
+## Search (sinhala)
+![Screenshot 2024-10-22 161244](https://github.com/user-attachments/assets/94efc4c8-2dbf-4cce-9741-d44b63eb2189)
+
+![Screenshot 2024-10-22 160738](https://github.com/user-attachments/assets/c3821e9d-3da2-4345-83a3-0f6881dd67ca)
