@@ -30,3 +30,8 @@ The **Train Ticket Booking System** is a web-based application that allows users
 ![Screenshot 2024-10-22 161244](https://github.com/user-attachments/assets/94efc4c8-2dbf-4cce-9741-d44b63eb2189)
 
 ![Screenshot 2024-10-22 160738](https://github.com/user-attachments/assets/c3821e9d-3da2-4345-83a3-0f6881dd67ca)
+
+Booking and seat selection
+
+![Screenshot 2024-11-15 131802](https://github.com/user-attachments/assets/221e02f3-cf69-4862-8f4e-7d0ebae4cbeb)
+
