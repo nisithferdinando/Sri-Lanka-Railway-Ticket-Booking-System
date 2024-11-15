@@ -4,6 +4,7 @@ import Home from '../Pages/Home'
 import HomeS from '../Pages/sinhala/HomeS'
 import Login from '../Pages/Login'
 import SignUp from '../Pages/SignUp'
+import SeatBooking from '../Pages/SeatBooking'
 
 const Routers = () => {
   return (
@@ -14,6 +15,7 @@ const Routers = () => {
           <Route path='/login' element={<Login/>}/>
           <Route path='/signup' element={<SignUp/>}/>
           <Route path='/home-sin' element={<HomeS/>}/>
+          <Route path='/seat-booking/:trainId' element={<SeatBooking/>}/>
          
         </Routes>
        
