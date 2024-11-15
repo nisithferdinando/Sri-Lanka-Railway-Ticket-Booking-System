@@ -1,6 +1,6 @@
 
 export const Station = [
-    "Colombo Fort", "Ragama", "Gampaha", "Veyangoda", "Mirigama", 
+    "Colombo Fort", "Maradana", "Ragama", "Gampaha", "Veyangoda", "Mirigama", 
     "Polgahawela", "Rambukkana", "Ihalakotte", "Kadugannawa", "Peradeniya", 
     "Sarasaviuyana", "Kandy", "Gelioya", "Gampola", "Tembligala", 
     "Ulapane", "Nawalapitiya", "Inguruoya", "Galboda", "Watawala", 
@@ -8,19 +8,48 @@ export const Station = [
     "Watagoda", "Great Western", "Radella", "Nanuoya", "Perakumpura", 
     "Ambewela", "Pattipola", "Ohiya", "Idalgasinna", "Haputale", 
     "Diyatalawa", "Bandarawela", "Kinigama", "Heel Oya", "Kital Ella", 
-    "Ella", "Demodara", "Uduwara", "Haliela", "Badulla"
+    "Ella", "Demodara", "Uduwara", "Haliela", "Badulla", "Mount Lavinia",
+  "Moratuwa",
+  "Kalutara South",
+  "Aluthgama",
+  "Bentota",
+  "Ahungalle",
+  "Ambalangoda",
+  "Hikkaduwa",
+  "Galle",
+  "Katugoda",
+  "Unawatuna",
+  "Thalpe",
+  "Habaraduwa",
+  "Koggala",
+  "Kathaluwa",
+  "Ahangama",
+  "Midigama",
+  "Kumbalgama",
+  "Weligama",
+  "Polwathumodara",
+  "Mirissa",
+  "Kamburugamuwa",
+  "Walgama",
+  "Matara",
+  "Piladuwa",
+  "Weherahena",
+  "Kakanadura",
+  "Bambaranda",
+  "Wewurukannala",
+  "Beliaththa",
   ];
   
 
  export const Stationsin=[
-   "කොළඹ කොටුව", "රාගම", "ගම්පහ", "වේයන්ගොඩ","මීරිගම",
+   "කොළඹ කොටුව", "මරදාන","රාගම", "ගම්පහ", "වේයන්ගොඩ","මීරිගම",
    "පොල්ගහවෙල","රඹුක්කන","ඉහල කොට්ටේ", "කඩුගන්නාව","පේරාදෙනිය",
    "සරසවි උයන","මහනුවර","ගෙලිඔය", "ගම්පොළ", "තෙබිලිගල", "උලපනේ", 
    "නවලපිටිය", "ඉගුරුඔය", "ගල්බොඩ", "වටවල", "ඉහලවටවල", "රොස්ඇල්ල", 
    "හැටන්", "කොටගල", "තලවාකැලේ", "වටගොඩ", "ග්‍රේට් වෙස්ටන්", "රදැල්ල",
     "නනුඔය", "පරකුම්පුර", "අඹේවෙල", "පට්ටිපොල", "ඔහිය", "ඉදලගස්හින්න", 
     "හපුතලේ", "දියතලාව", "බණ්ඩාරවෙල", "කිනිගම", "හීල් ඔය", "කිතල්ඇල්ල", 
-    "ඇල්ල", "දෙමෝදර", "උඩුවර", "හාලිඇල", "බදුල්ල",
+    "ඇල්ල", "දෙමෝදර", "උඩුවර", "හාලිඇල", "බදුල්ල", "ගල්කිස්ස", "මොරටුව", "දකුණු කලුතර", "අලුත්ගම", "බෙන්තොට", "අහුන්ගල්ල", "අම්බලන්ගොඩ", "හික්කඩුව", "ගාල්ල", "කටුගොඩ", "උනවටුන", "තල්පේ", "හබරාදුව", "කොක්ගල", "කතලුව", "අහන්ගම", "මිදිගම", "කුබල්ගම", "වැලිගම", "පොල්වතුමෝදර","මිරිස්ස", "කඹුරුගමුව", "වල්ගම", "මාතර", "පිලදුව", "වේරහේන", "කැකණදුර", "බඹරන්ද", "වැවුරුකන්නල","බෙලිඅත්ත"
  ];
 
 export default Station;

@@ -2,29 +2,35 @@ const express = require('express');
 const router = express.Router();
 const Train = require('../models/Train'); 
 
+// Train search in English
 router.post('/search', async (req, res) => {
-    const { startStation, endStation, selectedDate} = req.body;
-    const dayOfWeek = new Date(selectedDate).toLocaleString('en-US', { weekday: 'long' });
+    const { startStation, endStation, selectedDate } = req.body;
+
+    const today = new Date();
+    const selected = new Date(selectedDate);
+
+    if (selected <= today) {
+        return res.status(400).json({ error: true, message: 'Please select a future date.' });
+    }
+
+    const dayOfWeek = selected.toLocaleString('en-US', { weekday: 'long' });
 
     try {
-        
         const matchingTrains = await Train.find({
             route: { $all: [startStation, endStation] }, 
             operatingDays: dayOfWeek
         });
 
-          const filteredTrains = matchingTrains.filter(train => {
+        const filteredTrains = matchingTrains.filter(train => {
             const startIndex = train.route.indexOf(startStation);
             const endIndex = train.route.indexOf(endStation);
             return startIndex !== -1 && endIndex !== -1 && startIndex < endIndex;
         });
 
-        
         if (filteredTrains.length === 0) {
             return res.status(404).json({ error: true, message: 'No trains available for the specified route.' });
         }
 
-        
         const response = filteredTrains.map(train => ({
             id: train._id,
             trainName: train.trainName,
@@ -36,7 +42,6 @@ router.post('/search', async (req, res) => {
             departs: train.departs,
             arrives: train.arrives,
             start: train.start,
-            
         }));
 
         res.json(response);
@@ -46,13 +51,20 @@ router.post('/search', async (req, res) => {
     }
 });
 
-  //train search sinhala 
-     router.post('/searchS', async (req, res) => {
-    const { startStationS, endStationS, selectedDateS} = req.body;
-    const dayOfWeek = new Date(selectedDateS).toLocaleString('en-US', { weekday: 'long' });
+// Train search in Sinhala
+router.post('/searchS', async (req, res) => {
+    const { startStationS, endStationS, selectedDateS } = req.body;
+
+    const today = new Date();
+    const selected = new Date(selectedDateS);
+
+    if (selected <= today) {
+        return res.status(400).json({ error: true, message: 'Please select a future date.' });
+    }
+
+    const dayOfWeek = selected.toLocaleString('en-US', { weekday: 'long' });
 
     try {
-        
         const matchingTrains = await Train.find({
             routeS: { $all: [startStationS, endStationS] },
             operatingDays: dayOfWeek
@@ -64,14 +76,13 @@ router.post('/search', async (req, res) => {
             return startIndex !== -1 && endIndex !== -1 && startIndex < endIndex;
         });
 
-        
         if (filteredTrains.length === 0) {
             return res.status(404).json({ error: true, message: 'No trains available for the specified route.' });
         }
 
-          const response = filteredTrains.map(train => ({
+        const response = filteredTrains.map(train => ({
             id: train._id,
-            trainNameS:train.trainNameS,
+            trainNameS: train.trainNameS,
             routeS: train.routeS.join(' - '),
             operatingDays: train.operatingDays,
             compartments: train.compartments,

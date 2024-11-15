@@ -55,7 +55,7 @@ const Login = () => {
     <div>
       <Navbar/>
             <div className='flex justify-center items-center'>
-            <div className='bg-[#F7F2F2] bg-opacity-60 border rounded-lg px-16 py-10 mt-24 outline-none'>
+            <div className='bg-white border-[1.5px] drop-shadow-md rounded-lg px-16 py-16 mt-24 outline-none'>
                 <form onSubmit={()=>{}}>
                     <div className='mt-4'>
                     <p className='text-xl font-medium text-gray-500 mb-4'>Email</p>
@@ -83,7 +83,7 @@ const Login = () => {
                    <Link to="/signup"><button className='text-white text-base font-sans bg-green-500 px-4 py-1 rounded-lg w-64 mt-7 hover:bg-green-400'>Create an account</button>
                    </Link> 
                     </div>
-                    <a href='#'><p className='text-blue-500 underline text-base text-center mt-4 hover:text-purple-800'>Forgot Password</p> </a>
+                    {/*<a href='#'><p className='text-blue-500 underline text-base text-center mt-4 hover:text-purple-800'>Forgot Password</p> </a>*/}
                 </form>
             </div>
 

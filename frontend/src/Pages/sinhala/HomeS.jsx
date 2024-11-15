@@ -104,10 +104,10 @@ const HomeS = () => {
       <div className='w-full'>
         <div className='flex justify-end mt-4 mr-24 gap-4 items-center'>
           <p className='text-lg font-sans text-blue-500 underline cursor-pointer hover:text-blue-400'>{userName}</p>
-          <p className='text-lg font-sans text-blue-500 cursor-pointer' onClick={handleLogout}>Logout</p>
+          <p className='text-lg font-sans text-blue-500 cursor-pointer' onClick={handleLogout}>පිටවීම</p>
           <div className='flex justify-center items-center gap-2 cursor-pointer'>
            <Link to='/'><TbWorld size={24} /></Link> 
-            <p className='text-base text-blue-500'>Sin</p>
+            <p className='text-base text-blue-500'>සිං</p>
           </div>
         </div>
         <div className='flex items-center justify-center mt-12 flex-col'>

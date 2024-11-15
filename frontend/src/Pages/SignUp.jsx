@@ -68,7 +68,7 @@ const SignUp = () => {
     <div>
       <Navbar/>
         <div className='flex justify-center items-center'>
-          <div className='bg-[#F7F2F2] bg-opacity-60 border rounded-lg px-16 py-11 mt-20 outline-none'>
+          <div className='bg-white border-[1.5px] drop-shadow-md rounded-lg px-16 py-11 mt-20 outline-none'>
             <form onSubmit={handleSignUp}>
                 <h1 className='text-center text-xl font-semibold text-purple-950'>Sign up here</h1>
                 <div className='flex flex-col'>
@@ -79,7 +79,6 @@ const SignUp = () => {
                  value={firstName}
                  onChange={(e)=>{setFirstName(e.target.value)}}
                  />
-
                 <input 
                  type='text'
                  placeholder='Last Name' 
