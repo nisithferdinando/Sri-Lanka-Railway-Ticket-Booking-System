@@ -20,7 +20,7 @@ The **Train Ticket Booking System** is a web-based application that allows users
 - **Database**: MongoDB (for user and booking information storage)
 - **Authentication**: JWT (JSON Web Tokens) for secure user login
 - **Mails**: Nodemailer
-- **Payment Gateway**: Integration with a payment provider for processing payments
+- **Payment Gateway**: Stripe payment provider for processing payments
 - **Version Control**: Git & GitHub for code management
 
  ## Search 
