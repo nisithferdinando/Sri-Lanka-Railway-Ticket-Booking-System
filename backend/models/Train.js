@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const seatSchema = new mongoose.Schema({
     seatNumber: { type: String, required: true },
-    isBooked: { type: Boolean, default: false }
+    isBooked: { type: Boolean, default: false },
+    exp:{type:Array}
 });
 
 const compartmentSchema = new mongoose.Schema({
@@ -10,7 +11,8 @@ const compartmentSchema = new mongoose.Schema({
     totalSeats: { type: Number, required: true },
     availableSeats: { type: Number, required: true },
     price: { type: Number, required: true },
-    seats: [seatSchema] 
+    seats: [seatSchema], 
+    arrivalTime: { type: String } 
 });
 
 const trainSchema = new mongoose.Schema({
