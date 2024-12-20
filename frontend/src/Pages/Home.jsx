@@ -70,7 +70,7 @@ const Home = () => {
   const handleRowClick = (params) => {
     const selectedTrain = params.row;
     console.log("Selected Train ID:", selectedTrain.id); // Use `id` instead of `_id`
-    navigate(`/seat-booking/${selectedTrain.id}`, { state: { selectedTrain } });
+    navigate(`/seat-booking/${selectedTrain.id}?date=${selectedDate}`, { state: { selectedTrain } });
   };
 
   const columns = [

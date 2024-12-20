@@ -22,54 +22,86 @@ router.get("/:trainId", async (req, res) => {
 
 // Book seats in a specific compartment
 router.post("/:trainId/compartment/:compartmentName/book", async (req, res) => {
-    const { seatNumbers } = req.body; // Seat numbers being booked
-    const {trainId, compartmentName}=req.params;
+    const { seatNumbers, selectedDate } = req.body; 
+    const { trainId, compartmentName } = req.params;
+    console.log(selectedDate);
+
+    // Validate seatNumbers input
     if (!Array.isArray(seatNumbers) || seatNumbers.length === 0) {
         return res.status(400).json({ error: "Invalid seat selection" });
     }
- 
+
     if (seatNumbers.length > 5) {
         return res.status(400).json({ error: "Maximum 5 seats can be booked at a time." });
     }
- 
+
     try {
-        const train = await Train.findById(req.params.trainId); // Fetch the train
+        // Fetch the train and validate its existence
+        const train = await Train.findById(trainId);
         if (!train) return res.status(404).json({ error: "Train not found" });
 
         // Find the specified compartment
-        const compartment = train.compartments.find(c => c.compartmentName === req.params.compartmentName);
- 
+        const compartment = train.compartments.find(c => c.compartmentName === compartmentName);
         if (!compartment) {
             return res.status(404).json({ error: "Compartment not found" });
         }
 
-        // Check if the requested seats are available in the compartment
+        // Check for unavailable seats
         const unavailableSeats = seatNumbers.filter(seat => {
             const seatInCompartment = compartment.seats.find(s => s.seatNumber === seat);
-            return !seatInCompartment || seatInCompartment.isBooked;
+            return !seatInCompartment;
         });
 
         if (unavailableSeats.length > 0) {
-            return res.status(400).json({ error: `Seats ${unavailableSeats.join(', ')} are not available.` });
+            return res.status(400).json({ error: `Seats ${unavailableSeats.join(', ')} are not available or already booked.` });
         }
 
-        // Mark seats as booked
+        
+        if (!compartment.arrivalTime) {
+            compartment.arrivalTime = train.arrives; 
+        }
+       
+        const expTime = selectedDate;
+
+        const expTimes = new Set(); 
         compartment.seats.forEach(seat => {
             if (seatNumbers.includes(seat.seatNumber)) {
-                seat.isBooked = true; // Mark the seat as booked
+                if (!seat.isBooked) {
+                    seat.isBooked = true;
+                }
+
+                
+                if (!Array.isArray(seat.exp)) {
+                    seat.exp = [];
+                }
+
+                
+                if (!seat.exp.includes(expTime)) {
+                    seat.exp.push(expTime);
+                    expTimes.add(expTime);
+                }
             }
         });
 
-        // Update available seats count
         compartment.availableSeats -= seatNumbers.length;
 
         await train.save();
 
-        res.json({ success: true, message: "Seats booked successfully!", remainingSeats: compartment.availableSeats });
-    }
-     catch (error) {
+        res.json({
+            success: true,
+            message: "Your seats are marked successfully!",
+            remainingSeats: compartment.availableSeats,
+            expTimes: Array.from(expTimes), 
+        });
+    } catch (error) {
+        console.error("Error booking seats:", error);
         res.status(500).json({ error: "Booking failed. Please try again." });
     }
 });
+
+
+
+
+
 
 module.exports = router;
