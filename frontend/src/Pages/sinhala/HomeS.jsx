@@ -84,6 +84,11 @@ const HomeS = () => {
       }
 
     };
+    const handleRowClick = (params) => {
+      const selectedTrain = params.row;
+      console.log("Selected Train ID:", selectedTrain.id); // Use `id` instead of `_id`
+      navigate(`/seat-bookingS/${selectedTrain.id}?date=${selectedDateS}`, { state: { selectedTrain } });
+    };
 
     const columns = [
       //{ field: 'id', headerName: 'ID', width: 90 },
@@ -177,10 +182,7 @@ const HomeS = () => {
                    className='mt-8'
                    hideFooter={true}
                    disableSelectionOnClick={false} 
-                   onRowClick={(params) => {
-                     setSelectedRow(params.row); 
-                   }}
-                   selectionModel={[selectedRow?.id]} 
+                   onRowClick={handleRowClick}
                    sx={{
                      '& .MuiDataGrid-columnHeaders': {
                        fontSize: '18px',  
