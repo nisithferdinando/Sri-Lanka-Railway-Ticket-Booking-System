@@ -3,6 +3,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import axiosInstance from "../Utilities/axiosInstance";
 import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer/Footer";
+import { useNavigate } from 'react-router-dom';
 
 const SeatBooking = () => {
   const { trainId } = useParams();
@@ -16,6 +17,7 @@ const SeatBooking = () => {
   const [loading, setLoading] = useState(true);
   const params = new URLSearchParams(search);
   const dateParam = params.get('date');
+  const navigate = useNavigate();
   
   const selectedDate = dateParam; 
   
@@ -84,7 +86,7 @@ const SeatBooking = () => {
       return;
     }
 
-    try {
+  /*  try {
       const response = await axiosInstance.post(`/api/trains/${trainId}/compartment/${selectedCompartment}/book`, {
         seatNumbers: selectedSeats,
         selectedDate:selectedDate
@@ -96,10 +98,23 @@ const SeatBooking = () => {
       alert("Booking failed. Please try again.");
       console.log(error);
     }
+      */
+
+    navigate('/contact-form', {
+      state: {
+        selectedSeats,
+        trainId,
+        compartment: selectedCompartment,
+        selectedDate,
+        trainDetails: train
+      }
+    });
   };
+  
 
   const isSeatBooked = (expTimes) => {
     if (!Array.isArray(expTimes) || expTimes.length === 0) return false; 
+
     
     return expTimes.some(exp => {
         if (!exp) return false; 
@@ -107,6 +122,7 @@ const SeatBooking = () => {
         console.log(selectedDate === expirationTime, selectedDate,expirationTime);
         return selectedDate === expirationTime; 
     });
+    
 };
 
   

@@ -6,6 +6,8 @@ import Login from '../Pages/Login'
 import SignUp from '../Pages/SignUp'
 import SeatBooking from '../Pages/SeatBooking'
 import SeatBookingS from '../Pages/sinhala/SeatBookingS'
+import PassengerForm from '../Pages/PassengerForm'
+import ReviewBooking from '../Pages/ReviewBooking'
 
 const Routers = () => {
   return (
@@ -18,6 +20,8 @@ const Routers = () => {
           <Route path='/home-sin' element={<HomeS/>}/>
           <Route path='/seat-booking/:trainId' element={<SeatBooking/>}/>
           <Route path='/seat-bookingS/:trainId' element={<SeatBookingS/>}/>
+          <Route path="/contact-form" element={<PassengerForm />} />
+          <Route path="/review-booking" element={<ReviewBooking />} />
         </Routes>
        
       </Router>
