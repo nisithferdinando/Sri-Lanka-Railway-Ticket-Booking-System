@@ -1,14 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer/Footer";
+import { Loader } from 'lucide-react';
 
 const PassengerForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const { selectedSeats, trainId, compartment, selectedDate, trainDetails } = location.state;
   
-  // Initialize form data directly without session storage
+  const loadFormData = () => {
+    const savedData = sessionStorage.getItem('passengerFormData');
+    if (savedData) {
+      return JSON.parse(savedData);
+    }
+    return initialFormData();
+  };
+  
+  const saveFormData = (data) => {
+    sessionStorage.setItem('passengerFormData', JSON.stringify(data));
+  };
+  
   const initialFormData = () => {
     const initialPrimary = {
       type: 'primary',
@@ -38,8 +51,9 @@ const PassengerForm = () => {
     return [initialPrimary, ...initialSecondary];
   };
 
-  const [passengers, setPassengers] = useState(initialFormData);
+  const [passengers, setPassengers] = useState(loadFormData);
   const [formErrors, setFormErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateForm = () => {
     let isValid = true;
@@ -76,7 +90,9 @@ const PassengerForm = () => {
       }
     });
 
-    setFormErrors(errors);
+    if (isSubmitting) {
+      setFormErrors(errors);
+    }
     return isValid;
   };
 
@@ -87,52 +103,67 @@ const PassengerForm = () => {
       [field]: value
     };
 
-    // Special handling for dependent selection
     if (field === 'isDependent' && value === true) {
       updatedPassengers[index].idType = 'dependent';
       updatedPassengers[index].idNumber = '';
     }
 
     setPassengers(updatedPassengers);
+    saveFormData(updatedPassengers);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
     if (validateForm()) {
+      setLoading(true);
+      // Simulate loading
+      await new Promise(resolve => setTimeout(resolve, 2000));
       const bookingDetails = {
         passengers,
         trainId,
         compartment,
         selectedDate,
-        trainDetails,
-        
+        trainDetails
       };
-      
+      setLoading(false);
       navigate('/review-booking', { state: bookingDetails });
     }
   };
 
+  useEffect(() => {
+    return () => {
+      const currentPath = window.location.pathname;
+      if (currentPath !== '/review-booking') {
+        sessionStorage.removeItem('passengerFormData');
+      }
+    };
+  }, []);
+
   return (
     <div>
       <Navbar />
+      {/*loading && <Loader/>*/}
       <div className="max-w-4xl mx-auto p-6 mt-14">
         <h1 className="text-3xl font-bold text-center mb-6">Passenger Details</h1>
         <div className="mb-4 flex flex-col justify-center items-center bg-slate-200 rounded-lg p-4 text-slate-800">
-  <div className="font-semibold flex justify-center">Train: <span className="font-normal ml-1">{trainDetails?.trainName}</span>
-  </div>
-  <div className="font-semibold flex justify-center">Date: <span className="font-normal ml-1">{selectedDate}</span>
-  </div>
-  <div className="font-semibold flex justify-center"> Compartment: <span className="font-normal ml-1">{compartment}</span>
-  </div>
-  
-</div>
+          <div className="font-semibold flex justify-center">
+            Train: <span className="font-normal ml-1">{trainDetails?.trainName}</span>
+          </div>
+          <div className="font-semibold flex justify-center">
+            Date: <span className="font-normal ml-1">{selectedDate}</span>
+          </div>
+          <div className="font-semibold flex justify-center">
+            Compartment: <span className="font-normal ml-1">{compartment}</span>
+          </div>
+        </div>
 
         {passengers.map((passenger, index) => (
           <div key={index} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-6">
             <h2 className="text-xl font-semibold mb-4">
-              {passenger.type === 'primary' ? 'Primary' : 'Secondary'} Passenger - <span className='text-blue-700'> Seat {passenger.seatNumber}</span>
+              {passenger.type === 'primary' ? 'Primary' : 'Secondary'} Passenger - 
+              <span className='text-blue-700'> Seat {passenger.seatNumber}</span>
             </h2>
-                  
-            {/* Name Row */}
+            
             <div className="flex gap-4 mb-4">
               <div className="w-1/4">
                 <label className="block text-gray-700 text-base font-bold mb-2">
@@ -156,7 +187,7 @@ const PassengerForm = () => {
                   type="text"
                   value={passenger.name}
                   onChange={(e) => handleInputChange(index, 'name', e.target.value)}
-                  className=" appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-blue-400"
+                  className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-blue-400"
                 />
                 {formErrors[index]?.name && (
                   <p className="text-red-500 text-xs mt-2 italic">{formErrors[index].name}</p>
@@ -164,7 +195,6 @@ const PassengerForm = () => {
               </div>
             </div>
 
-            {/* Gender Selection */}
             <div className="mb-4">
               <label className="block text-gray-700 text-base font-bold mb-2">
                 Gender*
@@ -198,7 +228,6 @@ const PassengerForm = () => {
 
             {passenger.type === 'primary' && (
               <>
-                {/* Email for primary passenger */}
                 <div className="mb-4">
                   <label className="block text-gray-700 text-base font-bold mb-2">
                     Email*
@@ -207,14 +236,13 @@ const PassengerForm = () => {
                     type="email"
                     value={passenger.email}
                     onChange={(e) => handleInputChange(index, 'email', e.target.value)}
-                    className=" border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-blue-400"
+                    className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-blue-400"
                   />
                   {formErrors[index]?.email && (
                     <p className="text-red-500 text-xs mt-2 italic">{formErrors[index].email}</p>
                   )}
                 </div>
 
-                {/* Mobile for primary passenger */}
                 <div className="mb-4">
                   <label className="block text-gray-700 text-base font-bold mb-2">
                     Mobile Number*
@@ -223,7 +251,7 @@ const PassengerForm = () => {
                     type="tel"
                     value={passenger.mobile}
                     onChange={(e) => handleInputChange(index, 'mobile', e.target.value)}
-                    className=" border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-blue-400 "
+                    className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-blue-400"
                   />
                   {formErrors[index]?.mobile && (
                     <p className="text-red-500 text-xs mt-2 italic">{formErrors[index].mobile}</p>
@@ -246,7 +274,6 @@ const PassengerForm = () => {
               </div>
             )}
 
-            {/* ID Type and Number */}
             {(!passenger.isDependent || passenger.type === 'primary') && (
               <div className="flex gap-4 mb-4">
                 <div className="w-1/3">
@@ -256,7 +283,7 @@ const PassengerForm = () => {
                   <select
                     value={passenger.idType}
                     onChange={(e) => handleInputChange(index, 'idType', e.target.value)}
-                    className=" shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     disabled={passenger.isDependent}
                   >
                     <option value="ID">ID</option>
@@ -271,7 +298,7 @@ const PassengerForm = () => {
                     type="text"
                     value={passenger.idNumber}
                     onChange={(e) => handleInputChange(index, 'idNumber', e.target.value)}
-                    className=" border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-blue-400"
+                    className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-blue-400"
                     disabled={passenger.isDependent}
                   />
                   {formErrors[index]?.idNumber && (
