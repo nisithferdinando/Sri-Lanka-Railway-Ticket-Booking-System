@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Navbar from "../Components/Navbar/Navbar";
-import Footer from "../Components/Footer/Footer";
-import { Loader } from 'lucide-react';
-import LoadingOverlay from '../Utilities/LoadingOverlay';
 
-const PassengerForm = () => {
+import LoadingOverlay from '../../Utilities/LoadingOverlay';
+import Navbar from '../../Components/Navbar/Navbar';
+import Footer from '../../Components/Footer/Footer';
+
+const PassengerFormS = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -65,10 +65,10 @@ const PassengerForm = () => {
       
       if (passenger.type === 'primary') {
         if (!passenger.email || !passenger.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-          passengerErrors.email = 'Valid email is required';
+          passengerErrors.email = 'විද්‍යුත් ලිපිනය අවශ්‍යයි';
         }
         if (!passenger.mobile || !passenger.mobile.match(/^\d{10}$/)) {
-          passengerErrors.mobile = 'Mobile number must be 10 digits';
+          passengerErrors.mobile = 'දුරකථන අංකය 10 අංකයින් යුතුයි';
         }
         if (passenger.idType === 'ID' && (!passenger.idNumber || !passenger.idNumber.match(/^.{9}V$/))) {
           passengerErrors.idNumber = 'ID must be 9 characters ending with V';
@@ -79,10 +79,10 @@ const PassengerForm = () => {
       }
 
       if (!passenger.name.trim()) {
-        passengerErrors.name = 'Name is required';
+        passengerErrors.name = 'නම අවශ්‍යයි';
       }
       if (!passenger.gender) {
-        passengerErrors.gender = 'Gender is required';
+        passengerErrors.gender = 'ස්ත්‍රී/පුරුෂ අවශ්‍යයි';
       }
 
       if (Object.keys(passengerErrors).length > 0) {
@@ -127,7 +127,7 @@ const PassengerForm = () => {
         trainDetails
       };
       setLoading(false);
-      navigate('/review-booking', { state: bookingDetails });
+      navigate('/review-bookingS', { state: bookingDetails });
     }
   };
 
@@ -146,16 +146,16 @@ const PassengerForm = () => {
       {loading && <LoadingOverlay/>}
 
       <div className="max-w-4xl mx-auto p-6 mt-14">
-        <h1 className="text-3xl font-bold text-center mb-6 text-slate-700">Passenger Details</h1>
+        <h1 className="text-2xl font-bold text-center mb-6 text-slate-700">මගී විස්තර</h1>
         <div className="mb-4 flex flex-col justify-center items-center bg-slate-200 rounded-lg p-4 text-slate-800">
           <div className="font-semibold flex justify-center">
-            Train: <span className="font-normal ml-1">{trainDetails?.trainName}</span>
+          දුම්රිය: <span className="font-normal ml-1">{trainDetails?.trainNameS}</span>
           </div>
           <div className="font-semibold flex justify-center">
-            Date: <span className="font-normal ml-1">{selectedDate}</span>
+          දිනය: <span className="font-normal ml-1">{selectedDate}</span>
           </div>
           <div className="font-semibold flex justify-center">
-            Compartment: <span className="font-normal ml-1">{compartment}</span>
+          මැදිරිය: <span className="font-normal ml-1">{compartment}</span>
           </div>
         </div>
 
@@ -168,7 +168,7 @@ const PassengerForm = () => {
             
             <div className="flex gap-4 mb-4">
               <div className="w-1/4">
-                <label className="block text-gray-700 text-base font-bold mb-2">
+                <label className="block text-gray-700 text-base font-bold mb-1">
                   Title*
                 </label>
                 <select
@@ -176,14 +176,14 @@ const PassengerForm = () => {
                   onChange={(e) => handleInputChange(index, 'title', e.target.value)}
                   className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 >
-                  <option value="Mr">Mr</option>
-                  <option value="Mrs">Mrs</option>
-                  <option value="Miss">Miss</option>
+                  <option value="මහතා">මහතා</option>
+                  <option value="මහත්මිය">මහත්මිය</option>
+                  <option value="මෙණෙවිය">මෙණෙවිය</option>
                 </select>
               </div>
               <div className="w-3/4">
-                <label className="block text-gray-700 text-base font-bold mb-2">
-                  Full Name*
+                <label className="block text-gray-700 text-sm font-semibold mb-2">
+                සම්පූර්ණ නම*
                 </label>
                 <input
                   type="text"
@@ -197,30 +197,30 @@ const PassengerForm = () => {
               </div>
             </div>
 
-            <div className="mb-4">
-              <label className="block text-gray-700 text-base font-bold mb-2">
-                Gender*
+            <div className="mb-4 mt-4">
+              <label className="block text-gray-700 text-sm font-semibold mb-2">
+              ස්ත්‍රී/පුරුෂ*
               </label>
-              <div className="flex gap-4">
+              <div className="flex gap-4 mt-4">
                 <label className="inline-flex items-center">
                   <input
                     type="radio"
-                    value="male"
-                    checked={passenger.gender === 'male'}
+                    value="පුරුෂ"
+                    checked={passenger.gender === 'පුරුෂ'}
                     onChange={(e) => handleInputChange(index, 'gender', e.target.value)}
                     className="form-radio"
                   />
-                  <span className="ml-2">Male</span>
+                  <span className="ml-2">පුරුෂ</span>
                 </label>
                 <label className="inline-flex items-center">
                   <input
                     type="radio"
-                    value="female"
-                    checked={passenger.gender === 'female'}
+                    value="ස්ත්‍රී"
+                    checked={passenger.gender === 'ස්ත්‍රී'}
                     onChange={(e) => handleInputChange(index, 'gender', e.target.value)}
                     className="form-radio"
                   />
-                  <span className="ml-2">Female</span>
+                  <span className="ml-2">ස්ත්‍රී</span>
                 </label>
               </div>
               {formErrors[index]?.gender && (
@@ -231,8 +231,8 @@ const PassengerForm = () => {
             {passenger.type === 'primary' && (
               <>
                 <div className="mb-4">
-                  <label className="block text-gray-700 text-base font-bold mb-2">
-                    Email*
+                  <label className="block text-gray-700 text-sm font-semibold mb-2">
+                  විද්‍යුත් ලිපිනය*
                   </label>
                   <input
                     type="email"
@@ -246,8 +246,8 @@ const PassengerForm = () => {
                 </div>
 
                 <div className="mb-4">
-                  <label className="block text-gray-700 text-base font-bold mb-2">
-                    Mobile Number*
+                  <label className="block text-gray-700 text-sm font-semibold mb-2">
+                  දුරකථන අංකය*
                   </label>
                   <input
                     type="tel"
@@ -263,7 +263,7 @@ const PassengerForm = () => {
             )}
 
             {passenger.type === 'secondary' && (
-              <div className="mb-4">
+              <div className="mb-4 mt-5">
                 <label className="inline-flex items-center">
                   <input
                     type="checkbox"
@@ -271,7 +271,7 @@ const PassengerForm = () => {
                     onChange={(e) => handleInputChange(index, 'isDependent', e.target.checked)}
                     className="form-checkbox"
                   />
-                  <span className="ml-2">Below 18 years (Dependent)</span>
+                  <span className="ml-2 font-bold ">වසර 18 අඩු (Dependent)</span>
                 </label>
               </div>
             )}
@@ -279,22 +279,22 @@ const PassengerForm = () => {
             {(!passenger.isDependent || passenger.type === 'primary') && (
               <div className="flex gap-4 mb-4">
                 <div className="w-1/3">
-                  <label className="block text-gray-700 text-base font-bold mb-2">
-                    ID Type*
+                  <label className="block text-gray-700 text-sm font-semibold mb-2">
+                  හැඳුනුම්පත් වර්ගය*
                   </label>
                   <select
                     value={passenger.idType}
                     onChange={(e) => handleInputChange(index, 'idType', e.target.value)}
-                    className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow border rounded w-full py-2 text-sm px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     disabled={passenger.isDependent}
                   >
-                    <option value="ID">ID</option>
-                    <option value="passport">Passport</option>
+                    <option value="ID">හැඳුනුම්පත</option>
+                    <option value="passport">පාස්පෝට්</option>
                   </select>
                 </div>
                 <div className="w-2/3">
-                  <label className="block text-gray-700 text-base font-bold mb-2">
-                    ID Number*
+                  <label className="block text-gray-700 text-sm font-semibold mb-2">
+                  හැඳුනුම්පත් අංකය*
                   </label>
                   <input
                     type="text"
@@ -317,7 +317,7 @@ const PassengerForm = () => {
             onClick={handleSubmit}
             className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
-            Review Booking
+            විස්තර පරීක්ෂා කරන්න
           </button>
         </div>
       </div>
@@ -326,4 +326,4 @@ const PassengerForm = () => {
   );
 };
 
-export default PassengerForm;
+export default PassengerFormS;
