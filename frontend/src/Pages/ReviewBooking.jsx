@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer/Footer";
 import { Loader } from 'lucide-react';
+import LoadingOverlay from '../Utilities/LoadingOverlay';
 
 const ReviewBooking = () => {
   const location = useLocation();
@@ -21,7 +22,7 @@ const ReviewBooking = () => {
   const handleProceedToPayment = async () => {
     setLoading(true);
     // Simulate loading
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    await new Promise(resolve => setTimeout(resolve, 1000));
     sessionStorage.removeItem('passengerFormData');
     setLoading(false);
     navigate('/payment', { 
@@ -92,7 +93,7 @@ const ReviewBooking = () => {
   return (
     <div>
       <Navbar />
-      {/*loading && <Loader/>*/}
+      {loading && <LoadingOverlay/>}
       <div className="max-w-4xl mx-auto p-6 mt-14">
         <h1 className="text-3xl font-bold text-center mb-6">Review Booking Details</h1>
 

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer/Footer";
 import { Loader } from 'lucide-react';
+import LoadingOverlay from '../Utilities/LoadingOverlay';
 
 const PassengerForm = () => {
   const location = useLocation();
@@ -117,7 +118,7 @@ const PassengerForm = () => {
     if (validateForm()) {
       setLoading(true);
       // Simulate loading
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       const bookingDetails = {
         passengers,
         trainId,
@@ -142,7 +143,8 @@ const PassengerForm = () => {
   return (
     <div>
       <Navbar />
-      {/*loading && <Loader/>*/}
+      {loading && <LoadingOverlay/>}
+
       <div className="max-w-4xl mx-auto p-6 mt-14">
         <h1 className="text-3xl font-bold text-center mb-6">Passenger Details</h1>
         <div className="mb-4 flex flex-col justify-center items-center bg-slate-200 rounded-lg p-4 text-slate-800">
