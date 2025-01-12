@@ -55,12 +55,12 @@ const PassengerForm = () => {
         if (!passenger.mobile || !passenger.mobile.match(/^\d{10}$/)) {
           passengerErrors.mobile = 'Mobile number must be 10 digits';
         }
-        if (passenger.idType === 'ID' && (!passenger.idNumber || !passenger.idNumber.match(/^.{8}V$/))) {
-          passengerErrors.idNumber = 'ID must be 8 characters ending with V';
+        if (passenger.idType === 'ID' && (!passenger.idNumber || !passenger.idNumber.match(/^.{9}V$/))) {
+          passengerErrors.idNumber = 'ID must be 9 characters ending with V';
         }
       } else if (!passenger.isDependent && passenger.idType === 'ID' && 
-                 (!passenger.idNumber || !passenger.idNumber.match(/^.{8}V$/))) {
-        passengerErrors.idNumber = 'ID must be 8 characters ending with V';
+                 (!passenger.idNumber || !passenger.idNumber.match(/^.{9}V$/))) {
+        passengerErrors.idNumber = 'ID must be 9 characters ending with V';
       }
 
       if (!passenger.name.trim()) {
@@ -103,7 +103,8 @@ const PassengerForm = () => {
         trainId,
         compartment,
         selectedDate,
-        trainDetails
+        trainDetails,
+        
       };
       
       navigate('/review-booking', { state: bookingDetails });
@@ -122,14 +123,15 @@ const PassengerForm = () => {
   </div>
   <div className="font-semibold flex justify-center"> Compartment: <span className="font-normal ml-1">{compartment}</span>
   </div>
+  
 </div>
 
         {passengers.map((passenger, index) => (
           <div key={index} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-6">
             <h2 className="text-xl font-semibold mb-4">
-              {passenger.type === 'primary' ? 'Primary' : 'Secondary'} Passenger - Seat {passenger.seatNumber}
+              {passenger.type === 'primary' ? 'Primary' : 'Secondary'} Passenger - <span className='text-blue-700'> Seat {passenger.seatNumber}</span>
             </h2>
-
+                  
             {/* Name Row */}
             <div className="flex gap-4 mb-4">
               <div className="w-1/4">
@@ -254,7 +256,7 @@ const PassengerForm = () => {
                   <select
                     value={passenger.idType}
                     onChange={(e) => handleInputChange(index, 'idType', e.target.value)}
-                    className=" border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className=" shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     disabled={passenger.isDependent}
                   >
                     <option value="ID">ID</option>

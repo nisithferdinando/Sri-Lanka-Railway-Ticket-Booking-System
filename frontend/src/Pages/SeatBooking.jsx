@@ -106,7 +106,8 @@ const SeatBooking = () => {
         trainId,
         compartment: selectedCompartment,
         selectedDate,
-        trainDetails: train
+        trainDetails: train,
+        
       }
     });
   };

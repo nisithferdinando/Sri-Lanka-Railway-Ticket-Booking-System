@@ -1,9 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const Train = require('../models/Train'); 
+const Train = require("../models/Train");
 
-// Get a specific train by ID
-router.get("/:trainId", async (req, res) => {
+exports.selectTrain= async (req, res) => {
     const { trainId } = req.params;
 
     try {
@@ -18,10 +15,10 @@ router.get("/:trainId", async (req, res) => {
         console.error("Error fetching train data:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
-});
+}
 
 // Book seats in a specific compartment
-router.post("/:trainId/compartment/:compartmentName/book", async (req, res) => {
+exports.trainBooking= async (req, res) => {
     const { seatNumbers, selectedDate } = req.body; 
     const { trainId, compartmentName } = req.params;
     console.log(selectedDate);
@@ -97,11 +94,6 @@ router.post("/:trainId/compartment/:compartmentName/book", async (req, res) => {
         console.error("Error booking seats:", error);
         res.status(500).json({ error: "Booking failed. Please try again." });
     }
-});
+}
 
 
-
-
-
-
-module.exports = router;

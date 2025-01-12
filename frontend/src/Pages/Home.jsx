@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+ import React, { useEffect, useState } from 'react';
 import { TbWorld } from "react-icons/tb";
 import { Station } from '../Utilities/trainData';
 import { Link, useNavigate } from 'react-router-dom';
@@ -78,7 +78,7 @@ const Home = () => {
     { field: 'start', headerName: 'Start', width: 150 },
     { field: 'departs', headerName: 'Departs', width: 150 },
     { field: 'arrives', headerName: 'Arrives', width: 150 },
-  ];
+  ];  
 
   return (
     <div>
