@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer/Footer";
 import { CreditCard, Loader } from 'lucide-react';
+import LoadingOverlay from '../Utilities/LoadingOverlay';
 
 const BookingPayment = () => {
   const location = useLocation();
@@ -113,7 +114,7 @@ const BookingPayment = () => {
     e.preventDefault();
     if (validateForm()) {
       setLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       setLoading(false);
       navigate('/confirmation');
     }
@@ -126,6 +127,7 @@ const BookingPayment = () => {
   return (
     <div>
       <Navbar />
+      {loading && <LoadingOverlay/>}
       <div className="max-w-6xl mx-auto p-6 mt-14 pb-40">
         <h1 className="text-3xl font-bold text-center mb-8">Complete Your Payment</h1>
 
@@ -263,7 +265,7 @@ const BookingPayment = () => {
                 className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-blue-300"
                 disabled={loading}
               >
-                {loading ? 'Processing...' : `Pay Rs. ${total.toFixed(2)}`}
+                {`Pay Rs. ${total.toFixed(2)}`}
               </button>
             </form>
           </div>

@@ -1,9 +1,11 @@
 
 import React, { useEffect, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
-import axiosInstance from "../../Utilities/axiosInstance";
-import Navbar from "../../Components/Navbar/Navbar";
-import Footer from "../../Components/Footer/Footer";
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import axiosInstance from '../../Utilities/axiosInstance';
+import Navbar from '../../Components/Navbar/Navbar';
+import Footer from '../../Components/Footer/Footer';
+import LoadingOverlay from '../../Utilities/LoadingOverlay';
+
 
 const SeatBookingS = () => {
     const { trainId } = useParams();
@@ -17,6 +19,7 @@ const SeatBookingS = () => {
     const [loading, setLoading] = useState(true);
     const params = new URLSearchParams(search);
     const dateParam = params.get('date');
+    const navigate = useNavigate();
     
     const selectedDate = dateParam; 
     
@@ -85,7 +88,7 @@ const SeatBookingS = () => {
         return;
       }
   
-      try {
+     /* try {
         const response = await axiosInstance.post(`/api/trains/${trainId}/compartment/${selectedCompartment}/book`, {
           seatNumbers: selectedSeats,
           selectedDate:selectedDate
@@ -97,7 +100,23 @@ const SeatBookingS = () => {
         alert("Booking failed. Please try again.");
         console.log(error);
       }
+        */
+
+      setLoading(true);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    setLoading(false);
+    navigate('/contact-formS', {
+      state: {
+        selectedSeats,
+        trainId,
+        compartment: selectedCompartment,
+        selectedDate,
+        trainDetails: train,
+        
+      }
+    });
     };
+    
   
     const isSeatBooked = (expTimes) => {
       if (!Array.isArray(expTimes) || expTimes.length === 0) return false; 
@@ -110,11 +129,6 @@ const SeatBookingS = () => {
       });
   };
   
-    
-  
-    if (loading) {
-      return <p>Loading train data...</p>;
-    }
   
     if (error) {
       return <p>{error}</p>;
@@ -123,13 +137,14 @@ const SeatBookingS = () => {
     return (
       <div>
         <Navbar />
+        {loading && <LoadingOverlay/>}
         <div className="mt-14">
           <h1 className="text-3xl font-bold mx-auto text-center">
            දුම්රිය: {train?.trainNameS || "Loading..."}
           </h1>
           <h2 className='text-lg text-center font-sans text-blue-700 mt-4'>දිනය: {selectedDate}</h2>
           <div className="text-xl font-semibold flex gap-x-8 justify-center mt-8">
-            <h2 className="text-slate-700 ">ආරම්භය: {train?.startStationS}</h2>
+            <h2 className="text-slate-700 ">ආරම්භය: {train?.startS}</h2>
             <h2 className="text-slate-700">ගමනාන්තය: {train?.endStationS}</h2>
           </div>
           <div className='text-lg font-normal flex gap-x-8 justify-center items-center mt-2'>

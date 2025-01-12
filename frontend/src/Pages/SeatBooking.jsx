@@ -4,6 +4,7 @@ import axiosInstance from "../Utilities/axiosInstance";
 import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer/Footer";
 import { useNavigate } from 'react-router-dom';
+import LoadingOverlay from '../Utilities/LoadingOverlay';
 
 const SeatBooking = () => {
   const { trainId } = useParams();
@@ -100,6 +101,10 @@ const SeatBooking = () => {
     }
       */
 
+    setLoading(true);
+    // Simulate loading
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setLoading(false);
     navigate('/contact-form', {
       state: {
         selectedSeats,
@@ -110,6 +115,7 @@ const SeatBooking = () => {
         
       }
     });
+
   };
   
 
@@ -126,12 +132,6 @@ const SeatBooking = () => {
     
 };
 
-  
-
-  if (loading) {
-    return <p>Loading train data...</p>;
-  }
-
   if (error) {
     return <p>{error}</p>;
   }
@@ -139,6 +139,7 @@ const SeatBooking = () => {
   return (
     <div>
       <Navbar />
+      {loading && <LoadingOverlay/>}
       <div className="mt-14">
         <h1 className="text-3xl font-bold mx-auto text-center">
           Train Name: {train?.trainName || "Loading..."}
