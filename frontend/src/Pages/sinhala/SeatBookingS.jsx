@@ -2,9 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../Utilities/axiosInstance';
-import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import LoadingOverlay from '../../Utilities/LoadingOverlay';
+import Navbars from './Navbars';
+import Toast from '../../Utilities/Toast';
 
 
 const SeatBookingS = () => {
@@ -17,12 +18,21 @@ const SeatBookingS = () => {
     const [selectedCompartment, setSelectedCompartment] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
+    const [toast, setToast] = useState({ show: false, message: '', type: 'error' });
     const params = new URLSearchParams(search);
     const dateParam = params.get('date');
     const navigate = useNavigate();
     
     const selectedDate = dateParam; 
     
+    const showToast = (message, type = 'error') => {
+      setToast({ show: true, message, type });
+    };
+  
+    const hideToast = () => {
+      setToast({ show: false, message: '', type: 'error' });
+    };
+  
     console.log("Selected Date:", selectedDate); 
   
     useEffect(() => {
@@ -47,6 +57,12 @@ const SeatBookingS = () => {
         fetchData();
       }
     }, [selectedTrain, trainId]);
+
+    const handleSearchAgain = async () => {
+      setLoading(true);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      navigate('/homeS');
+    };
   
     const handleSeatSelect = (seatNumber) => {
     if (selectedSeats.includes(seatNumber)) {
@@ -70,21 +86,21 @@ const SeatBookingS = () => {
         ) {
           setSelectedSeats((prev) => [...prev, seatNumber]);
         } else {
-          alert("Seat is not available or already booked.");
-        }
-      } else {
-        alert("Invalid compartment selection.");
+          showToast("ආසනය ලබා ගත නොහැක හෝ දැනටමත් වෙන් කර ඇත.");
       }
     } else {
-      alert("You can select up to 5 seats only.");
+       showToast("අවලංගු මැදිරිය තේරීම.");
     }
-  };
+  } else {
+      showToast("ඔබට ආසන 5 ක් දක්වා පමණක් තේරිය හැක.");
+  }
+};
   
     
   
     const handleBookSeats = async () => {
       if (selectedSeats.length === 0) {
-        alert("Please select at least one seat.");
+        showToast("අවම වශයෙන් එක් ආසනයක්වත් තෝරන්න.");
         return;
       }
   
@@ -136,8 +152,15 @@ const SeatBookingS = () => {
   
     return (
       <div>
-        <Navbar />
+        <Navbars />
         {loading && <LoadingOverlay/>}
+        {toast.show && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={hideToast}
+        />
+      )}
         <div className="mt-14">
           <h1 className="text-3xl font-bold mx-auto text-center">
            දුම්රිය: {train?.trainNameS || "Loading..."}
@@ -214,13 +237,20 @@ const SeatBookingS = () => {
                         </button>
                       ))}
                   </div>
-                  
+                  <div className="flex justify-around gap-4 mt-10">
+                  <button
+                    className="bg-gray-600 text-white px-5 py-2 mt-10 rounded hover:bg-gray-700 transition-colors"
+                    onClick={handleSearchAgain}
+                  >
+                    නැවත සොයන්න
+                  </button>
                   <button
                     className="bg-blue-500 text-white px-5 py-2 rounded mt-10 hover:bg-blue-600"
                     onClick={handleBookSeats}
                   >
                     ඉදිරියට
                   </button>
+                  </div>
                 </div>
               )}
             </div>

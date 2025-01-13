@@ -18,6 +18,13 @@ const PassengerForm = () => {
     }
     return initialFormData();
   };
+  const handleHomeClick = async () => {
+    setLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    sessionStorage.removeItem('passengerFormData');
+    navigate('/');
+    setLoading(false);
+  };
   
   const saveFormData = (data) => {
     sessionStorage.setItem('passengerFormData', JSON.stringify(data));
@@ -70,13 +77,29 @@ const PassengerForm = () => {
         if (!passenger.mobile || !passenger.mobile.match(/^\d{10}$/)) {
           passengerErrors.mobile = 'Mobile number must be 10 digits';
         }
-        if (passenger.idType === 'ID' && (!passenger.idNumber || !passenger.idNumber.match(/^.{9}V$/))) {
-          passengerErrors.idNumber = 'ID must be 9 characters ending with V';
-        }
-      } else if (!passenger.isDependent && passenger.idType === 'ID' && 
-                 (!passenger.idNumber || !passenger.idNumber.match(/^.{9}V$/))) {
-        passengerErrors.idNumber = 'ID must be 9 characters ending with V';
+        if (passenger.idType === 'ID' && 
+          (!passenger.idNumber || 
+          !((passenger.idNumber.length === 10 && passenger.idNumber.endsWith('V')) || passenger.idNumber.length === 12))) {
+        passengerErrors.idNumber = 'ID must be 10 characters ending with V or 12 numerical characters';
       }
+      if (passenger.idType === 'passport' && 
+        (!passenger.idNumber || 
+        !((passenger.idNumber.length === 9 )))) {
+      passengerErrors.idNumber = 'Passport must be 9 digits';
+    }
+      } 
+      if (passenger.idType === 'passport' && 
+        (!passenger.idNumber || 
+        !((passenger.idNumber.length === 9 )))) {
+      passengerErrors.idNumber = 'Passport must be 9 digits';
+    }
+
+      if (!passenger.isDependent && passenger.idType === 'ID' && 
+        (!passenger.idNumber || 
+          !((passenger.idNumber.length === 10 && passenger.idNumber.endsWith('V')) || passenger.idNumber.length === 12))) {
+        passengerErrors.idNumber = 'ID must be 10 characters ending with V or 12 numerical characters';
+      }
+        
 
       if (!passenger.name.trim()) {
         passengerErrors.name = 'Name is required';
@@ -312,7 +335,13 @@ const PassengerForm = () => {
           </div>
         ))}
 
-        <div className="flex justify-end mt-6">
+      <div className="flex justify-between mt-6">
+          <button
+            onClick={handleHomeClick}
+            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Home
+          </button>
           <button
             onClick={handleSubmit}
             className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

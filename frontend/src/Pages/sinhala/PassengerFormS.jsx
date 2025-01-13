@@ -72,14 +72,15 @@ const PassengerFormS = () => {
         }
         if (passenger.idType === 'ID' && 
           (!passenger.idNumber || 
-          !((passenger.idNumber.length === 9 && passenger.idNumber.endsWith('V')) || passenger.idNumber.length === 12))) {
-        passengerErrors.idNumber = 'හැඳුනුම්පත V කින් අවසන් වන අක්ෂර 8 ක් හෝ සංඛ්‍යාත්මක අක්ෂර 12 ක් විය යුතුය.';
+          !((passenger.idNumber.length === 10 && passenger.idNumber.endsWith('V')) || passenger.idNumber.length === 12))) {
+        passengerErrors.idNumber = 'හැඳුනුම්පත V කින් අවසන් වන අක්ෂර 10 ක් හෝ සංඛ්‍යාත්මක අක්ෂර 12 ක් විය යුතුය.';
       }
       
-      } else if (!passenger.isDependent && passenger.idType === 'ID' && 
+      } /* else if (!passenger.isDependent && passenger.idType === 'ID' && 
                  (!passenger.idNumber || !passenger.idNumber.match(/^.{9}V$/))) {
         passengerErrors.idNumber = 'ID must be 9 characters ending with V';
       }
+        */
 
       if (!passenger.name.trim()) {
         passengerErrors.name = 'නම අවශ්‍යයි';
@@ -179,9 +180,9 @@ const PassengerFormS = () => {
                   onChange={(e) => handleInputChange(index, 'title', e.target.value)}
                   className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 >
-                  <option value="මහතා">මහතා</option>
-                  <option value="මහත්මිය">මහත්මිය</option>
-                  <option value="මෙණෙවිය">මෙණෙවිය</option>
+                  <option value="Mr">මහතා</option>
+                  <option value="Mrs">මහත්මිය</option>
+                  <option value="Miss">මෙණෙවිය</option>
                 </select>
               </div>
               <div className="w-3/4">

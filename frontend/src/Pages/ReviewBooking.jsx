@@ -11,12 +11,16 @@ const ReviewBooking = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const handleBack = () => {
+  const handleBack = async () => {
     // Preserve the form data in session storage when going back
+    setLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 700));
+    sessionStorage.removeItem('passengerFormData');
     if (bookingDetails?.passengers) {
       sessionStorage.setItem('passengerFormData', JSON.stringify(bookingDetails.passengers));
     }
     navigate(-1);
+    setLoading(false);
   };
 
   const handleProceedToPayment = async () => {
