@@ -5,6 +5,7 @@ import { validateEmail } from '../Utilities/Helper';
 import axiosInstance from '../Utilities/axiosInstance'
 import Navbar from '../Components/Navbar/Navbar';
 import Footer from '../Components/Footer/Footer';
+import LoadingOverlay from '../Utilities/LoadingOverlay';
 
 const SignUp = () => {
 
@@ -13,6 +14,8 @@ const SignUp = () => {
   const [email, setEmail]=useState("");
   const [password, setPassword]=useState("");
   const [error, setError]=useState(null);
+  const [loading, setLoading] = useState(false); // Initialize as false
+  
   const navigate=useNavigate();
   
 
@@ -38,6 +41,7 @@ const SignUp = () => {
       return
     }
     setError("");
+    setLoading(true);
 
     //Signup api call
 
@@ -52,21 +56,22 @@ const SignUp = () => {
        );
        localStorage.setItem("userName", `${response.data.firstName}`);
        localStorage.setItem("token", response.data.token);
-       navigate('/');
+       await new Promise(resolve => setTimeout(resolve, 400));
+      setLoading(false);
+       navigate('/?login=success');
 
     }
 
     catch(error){
-
-      setError(error.response?.data?.message || "Sign up error" )
-
+      setLoading(false);
+      setError(error.response?.data?.message || "Sign up error" );
     }
-
   };
 
   return (
     <div>
       <Navbar/>
+      {loading && <LoadingOverlay/>}
         <div className='flex justify-center items-center'>
           <div className='bg-white border-[1.5px] drop-shadow-md rounded-lg px-16 py-11 mt-20 outline-none'>
             <form onSubmit={handleSignUp}>

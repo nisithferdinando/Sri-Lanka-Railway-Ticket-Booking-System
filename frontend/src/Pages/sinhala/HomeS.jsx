@@ -17,16 +17,14 @@ const HomeS = () => {
   const [trainResults, setTrainResults] = useState([]);
   const [error, setError] = useState('');
   const [selectedRow, setSelectedRow] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showSearchForm, setShowSearchForm] = useState(true);
+
   useEffect(() => {
-
     const storedUserName = localStorage.getItem('userName');
-
     if (storedUserName) {
-
       setUserName(storedUserName);
-
     }
-
   }, []);
 
   const handleLogout = () => {
@@ -39,11 +37,13 @@ const HomeS = () => {
     const handleSearch= async (e)=>{
       e.preventDefault();
       setError('');
-    setTrainResults([]);
+      setTrainResults([]);
+      setIsLoading(true);
 
       
       if (!startStationS || !endStationS|| !selectedDateS) {
         setError('Please fill in all fields');
+        setIsLoading(false);
         return;
       }
 
@@ -61,7 +61,7 @@ const HomeS = () => {
         endStationS,
         selectedDateS,
       });
-
+      await new Promise(resolve => setTimeout(resolve, 1000));
       if (response.data.length === 0) {
         setError("No trains available for the specified route.");
 
@@ -69,29 +69,35 @@ const HomeS = () => {
         const resultsWithId = response.data.map((train) => ({
           id: train._id || train.trainNameS + train.routeS, 
           ...train,
-
       }));
-
       setTrainResults(resultsWithId);
+      setShowSearchForm(false);
       }
 
     } catch (error) {
-        if (error.response && error.response.data) {
-            setError(error.response.data.message || "Error fetching trains, please try again.");
-        } else {
-            setError("Error fetching trains, please try again.");
-        }
-      }
+      setError(error.response?.data?.message || "Error fetching trains, please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    };
-    const handleRowClick = (params) => {
+  const handleEditSearch = () => {
+    
+    setShowSearchForm(true);
+    setTrainResults([]);
+  };
+
+    const handleRowClick =  async(params) => {
+      setIsLoading(true);
+      await new Promise(resolve => setTimeout(resolve, 1000));
       const selectedTrain = params.row;
       console.log("Selected Train ID:", selectedTrain.id); // Use `id` instead of `_id`
       navigate(`/seat-bookingS/${selectedTrain.id}?date=${selectedDateS}`, { state: { selectedTrain } });
+      setIsLoading(false);
     };
 
     const columns = [
-      //{ field: 'id', headerName: 'ID', width: 90 },
+      
       { field: 'trainNameS', headerName: 'දුම්රිය', width: 200 },
        { field: 'startS', headerName: 'ආරම්භය', width: 150 },
 
@@ -115,6 +121,7 @@ const HomeS = () => {
             <p className='text-base text-blue-500'>සිං</p>
           </div>
         </div>
+        {showSearchForm ? (
         <div className='flex items-center justify-center mt-12 flex-col'>
           <div className='md:w-[650px] border-[1px] bg-white drop-shadow-md px-5 py-11'>
             <form onSubmit={handleSearch}>
@@ -153,8 +160,8 @@ const HomeS = () => {
               </div>
               {error && <p className='text-red-600 text-center mt-2'>{error}</p>}
               <div className='flex flex-row ml-4 gap-x-7 mt-8 justify-center md:justify-start'>
-                <button type='submit' className='text-white px-5 py-2 text-sm bg-blue-700 rounded hover:bg-blue-600'>
-                සොයන්න
+                <button type='submit' className='text-white px-5 py-2 text-sm bg-blue-700 rounded hover:bg-blue-600' disabled={isLoading}>
+                {isLoading ? 'සොයමින්...' : 'සෙවීම'}
                 </button>
                 <button type='reset' className='text-white px-5 py-2 text-sm bg-slate-900 rounded hover:bg-slate-800'>
                 නැවත සකසන්න
@@ -163,11 +170,19 @@ const HomeS = () => {
             </form>
           </div>
       </div>
-           {trainResults.length > 0 && (
+       ) : (
            
-              <div className='flex flex-col justify-center items-center w-auto mt-10'>
-                <div className='bg-white drop-shadow-sm px-14 pb-8 border-[1.5px]'>
+            <div className='flex flex-col justify-center items-center w-auto mt-10'>
+            <div className='bg-white drop-shadow-sm px-14 pb-8 border-[1.5px]'>
+              <div className='flex justify-between items-center mt-8'>
                  <h1 className='text-2xl font-medium text-slate-800 mt-8'>සෙවීමේ ප්‍රතිඵල</h1>
+                 <button 
+                  onClick={handleEditSearch}
+                  className='text-white px-4 py-2 text-base bg-blue-700 rounded hover:bg-blue-600'
+                >
+                  සෙවීම සංස්කරණය කරන්න
+                </button>
+                </div>
                  <div className='grid grid-cols-2 mt-8 gap-x-4'>
                   <p className='text-xl text-slate-950 font-semibold '>ආරම්භය: <span className=' font-medium'> {startStationS}</span> </p>
                   <p className='text-xl text-slate-950 font-semibold'>අවසානය: <span className='font-medium'>{endStationS}</span></p>
@@ -198,13 +213,16 @@ const HomeS = () => {
               </div>
             )}
             
+            {isLoading && (
+          <div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-slate-200 bg-opacity-50 z-50'>
+            <div className='animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500'></div>
+          </div>
+        )}
       </div>
       <div className='mt-36'>
       <Footer/>
       </div>
-     </div>
-     
-   
+    </div>
   );
 };
 

@@ -5,6 +5,7 @@ import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer/Footer";
 import { useNavigate } from 'react-router-dom';
 import LoadingOverlay from '../Utilities/LoadingOverlay';
+import Toast from '../Utilities/Toast';
 
 const SeatBooking = () => {
   const { trainId } = useParams();
@@ -16,12 +17,21 @@ const SeatBooking = () => {
   const [selectedCompartment, setSelectedCompartment] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState({ show: false, message: '', type: 'error' });
   const params = new URLSearchParams(search);
   const dateParam = params.get('date');
   const navigate = useNavigate();
   
   const selectedDate = dateParam; 
   
+  const showToast = (message, type = 'error') => {
+    setToast({ show: true, message, type });
+  };
+
+  const hideToast = () => {
+    setToast({ show: false, message: '', type: 'error' });
+  };
+
   console.log("Selected Date:", selectedDate); 
 
   useEffect(() => {
@@ -46,6 +56,11 @@ const SeatBooking = () => {
       fetchData();
     }
   }, [selectedTrain, trainId]);
+  const handleSearchAgain = async () => {
+    setLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    navigate('/');
+  };
 
   const handleSeatSelect = (seatNumber) => {
   if (selectedSeats.includes(seatNumber)) {
@@ -69,13 +84,13 @@ const SeatBooking = () => {
       ) {
         setSelectedSeats((prev) => [...prev, seatNumber]);
       } else {
-        alert("Seat is not available or already booked.");
+        showToast("Seat is not available or already booked.");
       }
     } else {
-      alert("Invalid compartment selection.");
+      showToast("Invalid compartment selection.");
     }
   } else {
-    alert("You can select up to 5 seats only.");
+    showToast("You can select up to 5 seats only.");
   }
 };
 
@@ -83,7 +98,7 @@ const SeatBooking = () => {
 
   const handleBookSeats = async () => {
     if (selectedSeats.length === 0) {
-      alert("Please select at least one seat.");
+      showToast("Please select at least one seat.");
       return;
     }
 
@@ -140,6 +155,13 @@ const SeatBooking = () => {
     <div>
       <Navbar />
       {loading && <LoadingOverlay/>}
+      {toast.show && (
+        <Toast 
+          message={toast.message}
+          type={toast.type}
+          onClose={hideToast}
+        />
+      )}
       <div className="mt-14">
         <h1 className="text-3xl font-bold mx-auto text-center">
           Train Name: {train?.trainName || "Loading..."}
@@ -217,12 +239,20 @@ const SeatBooking = () => {
                     ))}
                 </div>
                 
-                <button
-                  className="bg-blue-500 text-white px-5 py-2 rounded mt-10 hover:bg-blue-600"
-                  onClick={handleBookSeats}
-                >
-                  Next
-                </button>
+                <div className="flex justify-center gap-4 mt-10">
+                  <button
+                    className="bg-gray-600 text-white px-5 py-2 rounded hover:bg-gray-700 transition-colors"
+                    onClick={handleSearchAgain}
+                  >
+                    Search Again
+                  </button>
+                  <button
+                    className="bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600 transition-colors"
+                    onClick={handleBookSeats}
+                  >
+                    Next
+                  </button>
+                </div>
               </div>
             )}
           </div>
