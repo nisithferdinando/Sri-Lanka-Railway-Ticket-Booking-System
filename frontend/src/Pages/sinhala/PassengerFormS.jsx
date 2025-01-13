@@ -70,9 +70,12 @@ const PassengerFormS = () => {
         if (!passenger.mobile || !passenger.mobile.match(/^\d{10}$/)) {
           passengerErrors.mobile = 'දුරකථන අංකය 10 අංකයින් යුතුයි';
         }
-        if (passenger.idType === 'ID' && (!passenger.idNumber || !passenger.idNumber.match(/^.{9}V$/))) {
-          passengerErrors.idNumber = 'ID must be 9 characters ending with V';
-        }
+        if (passenger.idType === 'ID' && 
+          (!passenger.idNumber || 
+          !((passenger.idNumber.length === 9 && passenger.idNumber.endsWith('V')) || passenger.idNumber.length === 12))) {
+        passengerErrors.idNumber = 'හැඳුනුම්පත V කින් අවසන් වන අක්ෂර 8 ක් හෝ සංඛ්‍යාත්මක අක්ෂර 12 ක් විය යුතුය.';
+      }
+      
       } else if (!passenger.isDependent && passenger.idType === 'ID' && 
                  (!passenger.idNumber || !passenger.idNumber.match(/^.{9}V$/))) {
         passengerErrors.idNumber = 'ID must be 9 characters ending with V';
