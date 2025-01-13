@@ -183,7 +183,14 @@ const BookingPayment = () => {
                 {errors.cardHolder && <p className="text-red-500 text-sm">{errors.cardHolder}</p>}
               </div>
               <div>
-                <label className="block text-gray-700 mb-2">Card Number</label>
+                <label className="block text-gray-700 mb-2">
+                  <div className="flex justify-between items-center">
+                    <span>Card Number</span>
+                    <div className="flex gap-2">
+                      <CreditCard className="h-6 w-6 text-gray-500" />
+                    </div>
+                  </div>
+                </label>
                 <input
                   type="text"
                   name="cardNumber"
@@ -194,7 +201,9 @@ const BookingPayment = () => {
                   placeholder="XXXX XXXX XXXX XXXX"
                   value={paymentDetails.cardNumber}
                   onChange={handleInputChange}
+                  
                 />
+                
                 {errors.cardNumber && <p className="text-red-500 text-sm">{errors.cardNumber}</p>}
               </div>
               <div className="flex gap-4">

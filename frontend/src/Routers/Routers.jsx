@@ -11,6 +11,7 @@ import ReviewBooking from '../Pages/ReviewBooking'
 import BookingPayment from '../Pages/BookingPayment'
 import PassengerFormS from '../Pages/sinhala/PassengerFormS'
 import ReviewBookingS from '../Pages/sinhala/ReviewBookingS'
+import BookingPaymentS from '../Pages/sinhala/BookingPaymentS'
 
 const Routers = () => {
   return (
@@ -27,7 +28,8 @@ const Routers = () => {
           <Route path="/review-booking" element={<ReviewBooking />} />
           <Route path="/payment" element={<BookingPayment/>}/>
           <Route path="/contact-formS" element={<PassengerFormS />}/>
-          <Route path='/review-bookingS' element={<ReviewBookingS/>}/>
+          <Route path='/review-bookingS' element={<ReviewBookingS/>} />
+          <Route path='/paymentS' element={<BookingPaymentS/>}/>
         
         </Routes>
        
