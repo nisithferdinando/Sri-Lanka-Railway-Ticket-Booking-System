@@ -11,8 +11,11 @@ const ReviewBookingS = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const handleBack = () => {
+  const handleBack = async () => {
     // Preserve the form data in session storage when going back
+    setLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 700));
+    setLoading(false);
     if (bookingDetails?.passengers) {
       sessionStorage.setItem('passengerFormData', JSON.stringify(bookingDetails.passengers));
     }
@@ -114,7 +117,7 @@ const ReviewBookingS = () => {
             <div key={index} className="bg-white shadow-md rounded px-6 py-4">
               <h3 className="text-lg font-semibold mb-4 text-slate-800">
                 {passenger.type === 'primary' ? 'Primary' : 'Secondary'} Passenger 
-                <span className="text-blue-700 bg-slate-100 px-2 py-2 rounded-lg text-base ml-3"> Seat {passenger.seatNumber}</span>
+                <span className="text-blue-700 bg-slate-100 drop-shadow px-2 py-2 rounded-lg text-sm ml-3"> Seat {passenger.seatNumber}</span>
               </h3>
               {renderPassengerDetails(passenger)}
             </div>
@@ -125,13 +128,13 @@ const ReviewBookingS = () => {
         <div className="flex justify-between mt-8">
           <button
             onClick={handleBack}
-            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline"
+            className="bg-gray-500 hover:bg-gray-700 text-white font-semibold text-sm py-2 px-6 rounded focus:outline-none focus:shadow-outline"
           >
             විස්තර යාවත්කාලීන කිරීමට
           </button>
           <button
             onClick={handleProceedToPayment} // Add your payment route
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline"
+            className="bg-green-500 hover:bg-green-700 text-white font-semibold  py-3 px-6 text-sm rounded focus:outline-none focus:shadow-outline"
           >
            මුදල් ගෙවීම
           </button>
