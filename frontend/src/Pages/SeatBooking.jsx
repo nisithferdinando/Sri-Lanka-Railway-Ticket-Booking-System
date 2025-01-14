@@ -224,7 +224,7 @@ const SeatBooking = () => {
                     ?.seats.map((seat) => (
                       <button
                         key={seat.seatNumber}
-                        className={`p-2 rounded ${
+                        className={`p-2 rounded-xl ${
                           selectedSeats.includes(seat.seatNumber)
                             ? "bg-blue-900 text-white"
                             : isSeatBooked(seat.exp)
@@ -239,7 +239,7 @@ const SeatBooking = () => {
                     ))}
                 </div>
                 
-                <div className="flex justify-center gap-4 mt-10">
+                <div className="flex justify-between gap-4 mt-10">
                   <button
                     className="bg-gray-600 text-white px-5 py-2 rounded hover:bg-gray-700 transition-colors"
                     onClick={handleSearchAgain}
@@ -247,7 +247,7 @@ const SeatBooking = () => {
                     Search Again
                   </button>
                   <button
-                    className="bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600 transition-colors"
+                    className="bg-blue-500 text-white px-8 py-2 rounded hover:bg-blue-600 transition-colors"
                     onClick={handleBookSeats}
                   >
                     Next
