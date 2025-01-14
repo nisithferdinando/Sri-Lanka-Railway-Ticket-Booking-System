@@ -11,7 +11,6 @@ The **Train Ticket Booking System** is a web-based application that allows users
 - **Ticket Booking**: Enables users to book tickets for preferred trains, selecting travel class, seats, and providing passenger details.
 - **Payment Gateway Integration**: Secure payment processing for ticket purchases through a third-party payment gateway.
 - **Booking History**: Users can view their past bookings, download e-tickets, and check ticket status (confirmed, waiting list, etc.).
-- **Admin Dashboard**: Admins can manage train schedules, view booking statistics, and oversee system operations.
 
 ## Technologies Used
 
