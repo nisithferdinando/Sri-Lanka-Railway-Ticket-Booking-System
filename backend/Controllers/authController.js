@@ -128,6 +128,79 @@ exports.signup = async(req, res)=>{
                 message:"Internal Server Error",
             });
     }
- }
+ };
+  // get account api
+ exports.getAccount = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id); // Assuming `req.user.id` contains the authenticated user's ID
+        if (!user) {
+            return res.status(404).json({ error: true, message: "User not found" });
+        }
+        res.status(200).json({
+            error: false,
+            user: {
+                _id: user._id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+            }
+        });
+    } catch (error) {
+        console.error("Error fetching user account:", error);
+        res.status(500).json({ error: true, message: "Internal Server Error" });
+    }
+};
+
+// update account api
+exports.updateUserDetails = async (req, res) => {
+    try {
+        const { firstName, lastName, email } = req.body;
+
+        const updates = {};
+        if (firstName) updates.firstName = firstName;
+        if (lastName) updates.lastName = lastName;
+        if (email) {
+            const existingUser = await User.findOne({ email, _id: { $ne: req.user.id } });
+            if (existingUser) {
+                return res.status(400).json({
+                    error: true,
+                    message: "Email already in use by another account.",
+                });
+            }
+            updates.email = email;
+        }
+
+        const user = await User.findByIdAndUpdate(
+            req.user.id,
+            { $set: updates },
+            { new: true }
+        ).select('-password');
+
+        if (!user) {
+            return res.status(404).json({
+                error: true,
+                message: "User not found",
+            });
+        }
+
+        res.status(200).json({
+            error: false,
+            message: "Profile updated successfully.",
+            user: {
+                _id: user._id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                fullName: `${user.firstName} ${user.lastName}`,
+            },
+        });
+    } catch (error) {
+        console.error("Error updating user details:", error);
+        res.status(500).json({
+            error: true,
+            message: "Internal Server Error",
+        });
+    }
+};
 
 

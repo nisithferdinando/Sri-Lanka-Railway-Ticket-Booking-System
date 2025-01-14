@@ -12,6 +12,7 @@ import BookingPayment from '../Pages/BookingPayment'
 import PassengerFormS from '../Pages/sinhala/PassengerFormS'
 import ReviewBookingS from '../Pages/sinhala/ReviewBookingS'
 import BookingPaymentS from '../Pages/sinhala/BookingPaymentS'
+import Account from '../Pages/Account'
 
 const Routers = () => {
   return (
@@ -30,6 +31,7 @@ const Routers = () => {
           <Route path="/contact-formS" element={<PassengerFormS />}/>
           <Route path='/review-bookingS' element={<ReviewBookingS/>} />
           <Route path='/paymentS' element={<BookingPaymentS/>}/>
+          <Route path='/account' element={<Account/>}/>
         
         </Routes>
        
