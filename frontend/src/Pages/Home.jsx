@@ -7,6 +7,10 @@ import axiosInstance from '../Utilities/axiosInstance';
 import Navbar from '../Components/Navbar/Navbar';
 import Footer from '../Components/Footer/Footer';
 import Toast from '../Utilities/Toast';
+import LoadingOverlay from '../Utilities/LoadingOverlay';
+import { CircleUserRound, LogOut } from 'lucide-react';
+import { AccountCircle, Logout } from '@mui/icons-material'; // Import the AccountCircle icon
+import PersonIcon from '@mui/icons-material/Person';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -90,6 +94,13 @@ const Home = () => {
     }
   };
 
+  const handleAcccount= async()=>{
+    setIsLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    navigate('/account');
+    setIsLoading(false);
+  }
+
   const handleEditSearch = () => {
     setShowSearchForm(true);
     setTrainResults([]);
@@ -113,6 +124,7 @@ const Home = () => {
   return (
     <div>
       <Navbar />
+      
       {showToast && (
         <Toast
           message={`Welcome back, ${userName}!`}
@@ -120,11 +132,23 @@ const Home = () => {
           onClose={handleCloseToast}
           
         />
+        
       )}
       <div className='w-full'>
         <div className='flex justify-end mt-4 mr-24 gap-4 items-center'>
-          <p className='text-lg font-sans text-blue-500 underline cursor-pointer hover:text-blue-400'>{userName}</p>
-          <p className='text-lg font-sans text-blue-500 cursor-pointer' onClick={handleLogout}>Logout</p>
+        <div className="flex items-center gap-2">
+    
+    <button
+        className="text-lg font-sans text-blue-500 cursor-pointer hover:text-blue-400 flex gap-1 items-center"
+        onClick={handleAcccount}
+    >
+      <PersonIcon fontSize="large" style={{ color: '#8000ff', marginTop:"1" }} />
+        {userName}
+    </button>
+     </div>     
+      <p
+    className="flex items-center gap-2 text-lg font-sans text-red-600 cursor-pointer hover:text-red-500"onClick={handleLogout}>  <Logout fontSize="medium" />    Logout
+        </p>
           <div className='flex justify-center items-center gap-2 cursor-pointer'>
             <Link to='/home-sin'><TbWorld size={24} /></Link>
             <p className='text-base text-blue-500'>En</p>
@@ -135,7 +159,7 @@ const Home = () => {
           <div className='flex items-center justify-center mt-12 flex-col'>
             <div className='md:w-[650px] border-[1px] bg-white drop-shadow-md px-5 py-11'>
               <form onSubmit={handleSearch}>
-                <p className='text-center text-xl font-semibold text-slate-800'>Search Train</p>
+                <p className='text-center text-2xl font-sans text-slate-800'>Search Train</p>
                 <div className='grid md:grid-cols-2 mt-10 pl-4 xs:grid-cols-1 justify-center'>
                   <div className='flex flex-col py-2'>
                     <p className='text-slate-900 text-lg'>Start</p>
@@ -215,11 +239,7 @@ const Home = () => {
           </div>
         )}
 
-        {isLoading && (
-          <div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-slate-200 bg-opacity-50 z-50'>
-            <div className='animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500'></div>
-          </div>
-        )}
+        {isLoading && <LoadingOverlay/>}
       </div>
       <div className='mt-36'>
         <Footer />
