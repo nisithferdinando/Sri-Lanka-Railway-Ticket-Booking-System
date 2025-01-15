@@ -43,10 +43,15 @@ const Home = () => {
   };
 
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    setIsLoading(true);
     localStorage.removeItem('token');
     localStorage.removeItem('userName');
+    localStorage.removeItem('userId');
+    await new Promise(resolve => setTimeout(resolve, 1000));
     navigate('/login');
+    setIsLoading(false);
+
   };
 
   const handleSearch = async (e) => {
@@ -94,12 +99,19 @@ const Home = () => {
     }
   };
 
-  const handleAcccount= async()=>{
+  const handleAcccount = async () => {
+    const userName = localStorage.getItem('userName'); 
+    
+    if (!userName) {
+      navigate('/login');
+      return;
+    }
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    navigate('/account');
+    await new Promise(resolve => setTimeout(resolve, 1000)); 
+    navigate(`/account/${userName}`);
     setIsLoading(false);
-  }
+  };
+  
 
   const handleEditSearch = () => {
     setShowSearchForm(true);

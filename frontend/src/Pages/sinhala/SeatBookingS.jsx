@@ -61,7 +61,8 @@ const SeatBookingS = () => {
     const handleSearchAgain = async () => {
       setLoading(true);
       await new Promise(resolve => setTimeout(resolve, 1000));
-      navigate('/homeS');
+      navigate('/home-sin');
+      setLoading(false);
     };
   
     const handleSeatSelect = (seatNumber) => {
@@ -237,7 +238,7 @@ const SeatBookingS = () => {
                         </button>
                       ))}
                   </div>
-                  <div className="flex justify-around gap-4 mt-10">
+                  <div className="flex justify-between gap-4 mt-10">
                   <button
                     className="bg-gray-600 text-white px-5 py-2 mt-10 rounded hover:bg-gray-700 transition-colors"
                     onClick={handleSearchAgain}

@@ -25,7 +25,6 @@ const Account = () => {
         email: '',
     });
 
-    // Rest of your existing state and bookings data...
     const [bookings] = useState([
         {
             bookingId: "BK001",
@@ -43,18 +42,16 @@ const Account = () => {
             compartment: "B2",
             seatNumbers: "23",
             travelDate: "2025-01-12",
-            status: "expired",
+            status: "cancelled",
         },
     ]);
 
     const handleHomeClick = async () => {
         setIsNavigating(true);
-        // Simulate a small delay for the loader to be visible
         await new Promise(resolve => setTimeout(resolve, 800));
         navigate('/');
     };
 
-    // Your existing functions...
     const showToast = (message, type = 'error') => {
         setToast({ show: true, message, type });
     };
@@ -183,7 +180,7 @@ const Account = () => {
                             }
                         />
                         <Divider />
-                        {/* Rest of your existing CardContent for profile... */}
+                        {/* Profile Details */}
                         <CardContent>
                             {!isEditing ? (
                                 <Box className="space-y-4">
@@ -265,7 +262,7 @@ const Account = () => {
                         </CardContent>
                     </Card>
 
-                    {/* Booking History Card */}
+                    {/* Booking History */}
                     <Card elevation={3} sx={{ boxShadow: "revert" }}>
                         <CardHeader 
                             title={

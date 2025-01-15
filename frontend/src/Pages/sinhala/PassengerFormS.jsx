@@ -117,6 +117,13 @@ const PassengerFormS = () => {
     saveFormData(updatedPassengers);
   };
 
+  const handleHomeClick= async()=>{
+    setLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    navigate('/home-sin');
+    setLoading(false);
+  }
+
   const handleSubmit = async () => {
     setIsSubmitting(true);
     if (validateForm()) {
@@ -316,7 +323,13 @@ const PassengerFormS = () => {
           </div>
         ))}
 
-        <div className="flex justify-end mt-6">
+        <div className="flex justify-between mt-6">
+        <button
+            onClick={handleHomeClick}
+            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            මුල් පිටුව
+          </button>
           <button
             onClick={handleSubmit}
             className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

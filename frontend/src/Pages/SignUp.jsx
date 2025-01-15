@@ -14,10 +14,17 @@ const SignUp = () => {
   const [email, setEmail]=useState("");
   const [password, setPassword]=useState("");
   const [error, setError]=useState(null);
-  const [loading, setLoading] = useState(false); // Initialize as false
+  const [loading, setLoading] = useState(false); 
   
   const navigate=useNavigate();
   
+
+  const handleLogin= async()=>{
+    setLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    navigate('/login');
+    setLoading(false);
+  }
 
   const handleSignUp= async (e)=>{
     e.preventDefault();
@@ -61,7 +68,7 @@ const SignUp = () => {
        navigate('/?login=success');
 
     }
-
+  
     catch(error){
       setLoading(false);
       setError(error.response?.data?.message || "Sign up error" );
@@ -105,10 +112,17 @@ const SignUp = () => {
                 {error && <p className='text-sm text-red-500 text-center'>{error}</p>}
                 <button type="submit" className='text-center text-base bg-green-600 px-4 py-2 rounded-lg  text-white mt-5 hover:bg-green-500'>Sign Up</button>
                 <p className='text-center text-lg font-sans mt-4'>I have an account</p>
-                <Link to="/login"> <button className='flex justify-center text-center text-white font-sans text-lg bg-blue-700 px-2 py-1 rounded-lg mt-4 w-[200px] mx-auto hover:bg-blue-800'>Login</button>
-                </Link>
                 </div>
             </form>
+            <div className='flex justify-center items-center'>
+        
+        <button 
+          onClick={handleLogin}
+          className='flex justify-center text-center text-white font-sans text-lg bg-blue-700 px-2 py-1 rounded-lg mt-4 w-[200px] mx-auto hover:bg-blue-800'
+        >
+          Login
+        </button>
+            </div>
             </div>
          
         </div>
