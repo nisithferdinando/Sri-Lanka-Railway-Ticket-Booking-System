@@ -7,6 +7,10 @@ import axiosInstance from '../../Utilities/axiosInstance'
 import Navbars from './Navbars';
 import Footer from '../../Components/Footer/Footer';
 import { Link } from 'react-router-dom';
+import { LogOut } from 'lucide-react';
+import PersonIcon from '@mui/icons-material/Person';
+import LoadingOverlay from '../../Utilities/LoadingOverlay';
+
 
 const HomeS = () => {
   const navigate = useNavigate();
@@ -26,12 +30,29 @@ const HomeS = () => {
       setUserName(storedUserName);
     }
   }, []);
+  const handleAcccount= async()=>{
 
-  const handleLogout = () => {
+    const userName= localStorage.getItem("userName");
+
+    if(!userName){
+      navigate("/login");
+      return;
+
+    }
+    setIsLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    navigate(`/account/${userName}`);
+    setIsLoading(false);
+  };
+
+  const handleLogout = async () => {
+    setIsLoading(true);
     localStorage.removeItem('token');
      localStorage.removeItem('userName');
-
+    localStorage.removeItem('userId');
+    await new Promise(resolve => setTimeout(resolve, 1000));
     navigate('/login');
+    setIsLoading(false);
   };
 
     const handleSearch= async (e)=>{
@@ -114,8 +135,19 @@ const HomeS = () => {
       <Navbars/>
       <div className='w-full'>
         <div className='flex justify-end mt-4 mr-24 gap-4 items-center'>
-          <p className='text-lg font-sans text-blue-500 underline cursor-pointer hover:text-blue-400'>{userName}</p>
-          <p className='text-lg font-sans text-blue-500 cursor-pointer' onClick={handleLogout}>පිටවීම</p>
+        <div className="flex items-center gap-2">
+    
+    <button
+        className="text-lg font-sans text-blue-500 cursor-pointer hover:text-blue-400 flex gap-1 items-center"
+        onClick={handleAcccount}
+    >
+      <PersonIcon fontSize="large" style={{ color: '#8000ff', marginTop:"1" }} />
+        {userName}
+    </button>
+     </div>     
+      <p
+    className="flex items-center gap-2 text-lg font-sans text-red-600 cursor-pointer hover:text-red-500"onClick={handleLogout}>  <LogOut fontSize="medium" />පිටවීම
+        </p>
           <div className='flex justify-center items-center gap-2 cursor-pointer'>
            <Link to='/'><TbWorld size={24} /></Link> 
             <p className='text-base text-blue-500'>සිං</p>
@@ -213,11 +245,8 @@ const HomeS = () => {
               </div>
             )}
             
-            {isLoading && (
-          <div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-slate-200 bg-opacity-50 z-50'>
-            <div className='animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500'></div>
-          </div>
-        )}
+            {isLoading && <LoadingOverlay/>}
+        
       </div>
       <div className='mt-36'>
       <Footer/>
