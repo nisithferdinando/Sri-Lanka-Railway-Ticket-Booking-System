@@ -174,7 +174,7 @@ const PassengerFormS = () => {
           <div key={index} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-6">
             <h2 className="text-xl font-semibold mb-4 text-slate-800 ">
               {passenger.type === 'primary' ? 'Primary' : 'Secondary'} Passenger - 
-              <span className='text-blue-700'> Seat {passenger.seatNumber}</span>
+              <span className='text-blue-700 px-2 py-2 rounded-lg text-base ml-3 bg-slate-100'> Seat {passenger.seatNumber}</span>
             </h2>
             
             <div className="flex gap-4 mb-4">

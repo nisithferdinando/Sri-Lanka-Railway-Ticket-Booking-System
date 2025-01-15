@@ -25,7 +25,6 @@ const ReviewBooking = () => {
 
   const handleProceedToPayment = async () => {
     setLoading(true);
-    // Simulate loading
     await new Promise(resolve => setTimeout(resolve, 1000));
     sessionStorage.removeItem('passengerFormData');
     setLoading(false);

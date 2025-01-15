@@ -117,7 +117,7 @@ const ReviewBookingS = () => {
             <div key={index} className="bg-white shadow-md rounded px-6 py-4">
               <h3 className="text-lg font-semibold mb-4 text-slate-800">
                 {passenger.type === 'primary' ? 'Primary' : 'Secondary'} Passenger 
-                <span className="text-blue-700 bg-slate-100 drop-shadow px-2 py-2 rounded-lg text-sm ml-3"> Seat {passenger.seatNumber}</span>
+                <span className="text-blue-700 bg-slate-100 px-2 py-2 rounded-lg text-sm ml-3"> Seat {passenger.seatNumber}</span>
               </h3>
               {renderPassengerDetails(passenger)}
             </div>
