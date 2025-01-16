@@ -4,6 +4,7 @@ import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer/Footer";
 import { CreditCard, Loader } from 'lucide-react';
 import LoadingOverlay from '../Utilities/LoadingOverlay';
+import { Button } from '@mui/material';
 
 const BookingPayment = () => {
   const location = useLocation();
@@ -36,7 +37,7 @@ const BookingPayment = () => {
     cardNumber: '',
     expiryMonth: '',
     expiryYear: '',
-    cvc: ''
+    cvc: '123'
   });
 
   const getCompartmentPrice = () => {
@@ -110,6 +111,7 @@ const BookingPayment = () => {
     }
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
@@ -119,6 +121,13 @@ const BookingPayment = () => {
       navigate('/confirmation');
     }
   };
+
+  const handleCancel= async()=>{
+    setLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    navigate('/');
+    setLoading(false);
+  }
 
   const renderSeatNumbers = () => {
     return bookingDetails.passengers.map(p => p.seatNumber).join(', ');
@@ -276,7 +285,13 @@ const BookingPayment = () => {
               >
                 {`Pay Rs. ${total.toFixed(2)}`}
               </button>
+
             </form>
+            <button className='mt-4 w-full bg-red-500 text-slate-200 py-2 rounded-lg hover:bg-red-600 transition-colors'
+            onClick={handleCancel}
+            >
+              Cancel
+            </button>
           </div>
         </div>
       </div>
