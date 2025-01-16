@@ -68,11 +68,19 @@ const Home = () => {
 
     const currentDate = new Date();
     const selectedDateObj = new Date(selectedDate);
-    if (selectedDateObj < currentDate.setHours(0, 0, 0, 0)) {
+    if (selectedDateObj <=currentDate) {
       setError('Please select a future date');
       setIsLoading(false);
       return;
     }
+    const maxBookingDate = new Date(currentDate);
+  maxBookingDate.setDate(currentDate.getDate() + 5);
+
+  if (selectedDateObj > maxBookingDate) {
+    setError('Booking is only allowed up to 5 days from today');
+    setIsLoading(false);
+    return;
+  }
 
     try {
       const response = await axiosInstance.post("/api/trains/search", {

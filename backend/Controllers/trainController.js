@@ -5,12 +5,18 @@ exports.search= async (req, res) => {
     const { startStation, endStation, selectedDate } = req.body;
 
     const today = new Date();
-    const selected = new Date(selectedDate);
+  const selected = new Date(selectedDate);
 
     if (selected <= today) {
         return res.status(400).json({ error: true, message: 'Please select a future date.' });
     }
 
+    const maxBookingDate = new Date(today);
+    maxBookingDate.setDate(today.getDate() + 5);
+
+    if (selected > maxBookingDate) {
+        return res.status(400).json({ error: true, message: 'Booking is only allowed up to 5 days from today.' });
+      }
     const dayOfWeek = selected.toLocaleString('en-US', { weekday: 'long' });
 
     try {
