@@ -6,3 +6,5 @@ router.get('/:trainId', selectTrain);
 router.post("/:trainId/compartment/:compartmentName/book", trainBooking);
 
 module.exports=router;
+
+
