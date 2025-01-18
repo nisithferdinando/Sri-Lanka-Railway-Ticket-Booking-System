@@ -13,6 +13,8 @@ import PassengerFormS from '../Pages/sinhala/PassengerFormS';
 import ReviewBookingS from '../Pages/sinhala/ReviewBookingS';
 import BookingPaymentS from '../Pages/sinhala/BookingPaymentS';
 import Account from '../Pages/Account';
+import Ticket from '../Pages/Ticket';
+
 
 
 const isAuthenticated = () => {
@@ -79,6 +81,9 @@ const Routers = () => {
             path="/account/:userName"
             element={<ProtectedRoute element={<Account />} />}
           />
+          <Route
+          path="/tickets"
+          element={<ProtectedRoute element={<Ticket/>}/>}/>
         </Routes>
       </Router>
     </div>

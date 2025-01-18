@@ -9,7 +9,7 @@ const PassengerForm = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const { selectedSeats, trainId, compartment, selectedDate, trainDetails } = location.state;
+  const { selectedSeats, trainId, compartment, selectedDate, trainDetails, userId, username } = location.state;
   
   const loadFormData = () => {
     const savedData = sessionStorage.getItem('passengerFormData');
@@ -147,7 +147,9 @@ const PassengerForm = () => {
         trainId,
         compartment,
         selectedDate,
-        trainDetails
+        trainDetails,
+        selectedSeats,
+        userId,
       };
       setLoading(false);
       navigate('/review-booking', { state: bookingDetails });

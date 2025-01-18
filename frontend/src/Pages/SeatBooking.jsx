@@ -32,7 +32,6 @@ const SeatBooking = () => {
     setToast({ show: false, message: '', type: 'error' });
   };
 
-  console.log("Selected Date:", selectedDate); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -115,7 +114,8 @@ const SeatBooking = () => {
       console.log(error);
     }
       */
-
+    const userId= localStorage.getItem('userId');
+    const username = localStorage.getItem('username');
     setLoading(true);
     // Simulate loading
     await new Promise(resolve => setTimeout(resolve, 1000));
