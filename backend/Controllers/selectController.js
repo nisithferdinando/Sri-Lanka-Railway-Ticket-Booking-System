@@ -19,9 +19,11 @@ exports.selectTrain= async (req, res) => {
 
 // Book seats in a specific compartment
 exports.trainBooking= async (req, res) => {
-    const { seatNumbers, selectedDate } = req.body; 
+    const { seatNumbers, selectedDate, userId, username } = req.body; 
     const { trainId, compartmentName } = req.params;
     console.log(selectedDate);
+    console.log("Seat Numbers:", seatNumbers);
+   console.log("Selected Date:", selectedDate);
 
     // Validate seatNumbers input
     if (!Array.isArray(seatNumbers) || seatNumbers.length === 0) {

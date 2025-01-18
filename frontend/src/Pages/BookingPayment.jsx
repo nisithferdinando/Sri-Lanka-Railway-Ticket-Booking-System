@@ -5,6 +5,7 @@ import Footer from "../Components/Footer/Footer";
 import { CreditCard, Loader } from 'lucide-react';
 import LoadingOverlay from '../Utilities/LoadingOverlay';
 import { Button } from '@mui/material';
+import axiosInstance from '../Utilities/axiosInstance';
 
 const BookingPayment = () => {
   const location = useLocation();
@@ -12,11 +13,12 @@ const BookingPayment = () => {
   const bookingDetails = location.state;
   const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
+  
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (!bookingDetails || !bookingDetails.trainDetails) {
-      navigate('/review-booking');
+      
     }
   }, [bookingDetails, navigate]);
 
@@ -37,7 +39,7 @@ const BookingPayment = () => {
     cardNumber: '',
     expiryMonth: '',
     expiryYear: '',
-    cvc: '123'
+    cvc: ''
   });
 
   const getCompartmentPrice = () => {
@@ -115,10 +117,41 @@ const BookingPayment = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      setLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setLoading(false);
-      navigate('/confirmation');
+      try {
+        setLoading(true);
+        
+        // First attempt to book the seats
+
+        const userId= localStorage.getItem('userId');
+        const username = localStorage.getItem('username');
+        const response = await axiosInstance.post(
+          `/api/trains/${bookingDetails.trainId}/compartment/${bookingDetails.compartment}/book`,
+          {
+            seatNumbers: bookingDetails.selectedSeats,
+            selectedDate: bookingDetails.selectedDate,
+            userId,
+            username
+          }
+        );
+  
+        if (response.data.success) {
+          // If booking successful, show success message
+          
+          navigate('/tickets', { 
+            state: {
+              bookingDetails,
+              bookingResponse: response.data
+            }
+          });
+        } else {
+          alert("Booking failed. Please try again.");
+        }
+      } catch (error) {
+        console.error("Error during booking:", error);
+        alert("Booking failed. Please try again.");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 

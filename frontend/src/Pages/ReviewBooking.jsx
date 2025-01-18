@@ -22,21 +22,30 @@ const ReviewBooking = () => {
     navigate(-1);
     setLoading(false);
   };
-
   const handleProceedToPayment = async () => {
     setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    sessionStorage.removeItem('passengerFormData');
-    setLoading(false);
-    navigate('/payment', { 
-      state: {
-        ...bookingDetails,
-        trainDetails: bookingDetails.trainDetails,
-        passengers: bookingDetails.passengers,
-        compartment: bookingDetails.compartment,
-        selectedDate: bookingDetails.selectedDate,
-      }
-    });
+    try {
+      // Remove form data from session storage
+      await new Promise(resolve => setTimeout(resolve, 700));
+      sessionStorage.removeItem('passengerFormData');
+      
+      // Navigate to payment with all required booking details
+      navigate('/payment', { 
+        state: {
+          trainDetails: bookingDetails.trainDetails,
+          passengers: bookingDetails.passengers,
+          compartment: bookingDetails.compartment,
+          selectedDate: bookingDetails.selectedDate,
+          selectedSeats: bookingDetails.selectedSeats,
+          trainId: bookingDetails.trainId // Make sure trainId is included
+        }
+      });
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!bookingDetails || !bookingDetails.trainDetails) {
