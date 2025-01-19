@@ -46,6 +46,7 @@ const Account = () => {
     const [success, setSuccess] = useState('');
     const [toast, setToast] = useState({ show: false, message: '', type: 'error' });
     const [bookings, setBookings] = useState([]);
+    const [isCancelling, setIsCancelling] = useState(false);
     const [isLoadingBookings, setIsLoadingBookings] = useState(false);
    
     const [formData, setFormData] = useState({
@@ -133,18 +134,37 @@ const Account = () => {
     };
 
     const handleCancelBooking = async (bookingId) => {
+        if (!window.confirm('Are you sure you want to cancel this booking?')) {
+            return;
+        }
+
+        setIsCancelling(true);
         try {
-            await axiosInstance.post(`/api/bookings/${bookingId}/cancel`);
-            // Refresh booking history
-            const response = await axiosInstance.get('/api/bookings/history');
-            setBookings(response.data.bookings);
-            showToast('Booking cancelled successfully', 'success');
+            const response = await axiosInstance.post(`/api/booking/${bookingId}/cancel`);
+            
+            if (response.data.success) {
+                // Update the local bookings state to reflect cancellation
+                setBookings(prevBookings => 
+                    prevBookings.map(booking => 
+                        booking.bookingId === bookingId
+                            ? { ...booking, status: 'cancelled' }
+                            : booking
+                    )
+                );
+                showToast('Booking cancelled successfully', 'success');
+            } else {
+                showToast(response.data.message || 'Failed to cancel booking', 'error');
+            }
         } catch (error) {
             console.error('Error cancelling booking:', error);
-            showToast('Failed to cancel booking', 'error');
+            showToast(
+                error.response?.data?.message || 'Failed to cancel booking', 
+                'error'
+            );
+        } finally {
+            setIsCancelling(false);
         }
     };
-
     const getStatusChipColor = (status) => {
         switch (status.toLowerCase()) {
             case 'active':
