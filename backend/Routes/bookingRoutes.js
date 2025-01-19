@@ -7,5 +7,6 @@ const authenticateToken = require('../Utilities/utiliies');
 
 router.post('/saveBooking', bookingController.saveBookingDetails);
 router.get('/history', authenticateToken, bookingController.getBookingHistory);
+router.post('/:bookingId/cancel', authenticateToken, bookingController.cancelBooking);
 
 module.exports = router;

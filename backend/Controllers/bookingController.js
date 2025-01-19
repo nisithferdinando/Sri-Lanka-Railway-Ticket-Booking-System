@@ -1,6 +1,8 @@
 // controllers/bookingController.js
 const { v4: uuidv4 } = require('uuid');
 const Booking = require('../models/Booking');
+const Train = require('../models/Train');
+
 
 exports.saveBookingDetails = async (req, res) => {
   const { userId, trainName, compartment, seatNumbers, selectedDate, status } = req.body;
@@ -66,6 +68,104 @@ exports.getBookingHistory = async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Error fetching booking history'
+        });
+    }
+};
+exports.cancelBooking = async (req, res) => {
+    try {
+        const { bookingId } = req.params;
+       
+        // Find the booking
+        const booking = await Booking.findOne({ bookingId });
+       
+        if (!booking) {
+            return res.status(404).json({
+                success: false,
+                message: 'Booking not found'
+            });
+        }
+
+        // Check if booking is already cancelled
+        if (booking.status === 'cancelled') {
+            return res.status(400).json({
+                success: false,
+                message: 'Booking is already cancelled'
+            });
+        }
+
+        // Find the train
+        const train = await Train.findOne({
+            trainName: booking.trainName
+        });
+
+        if (!train) {
+            return res.status(404).json({
+                success: false,
+                message: 'Train not found'
+            });
+        }
+
+        // Find the compartment and seats
+        const compartment = train.compartments.find(comp =>
+            comp.compartmentName === booking.compartment
+        );
+
+        if (!compartment) {
+            return res.status(404).json({
+                success: false,
+                message: 'Compartment not found'
+            });
+        }
+
+        // Convert seatNumbers string to array if necessary
+        const seatNumbersArray = Array.isArray(booking.seatNumbers)
+            ? booking.seatNumbers
+            : booking.seatNumbers.split(',').map(seat => seat.trim());
+
+        // Convert booking selected date to YYYY-MM-DD format for comparison
+        const selectedDateStr = new Date(booking.selectedDate).toISOString().split('T')[0];
+        
+        // Remove the selected date from exp array for each seat
+        let updatedSeats = false;
+        compartment.seats.forEach(seat => {
+            if (seatNumbersArray.includes(seat.seatNumber)) {
+                // Convert each exp date to YYYY-MM-DD format for comparison
+                seat.exp = seat.exp.filter(date => {
+                    const expDateStr = new Date(date).toISOString().split('T')[0];
+                    return expDateStr !== selectedDateStr;
+                });
+                updatedSeats = true;
+            }
+        });
+
+        if (!updatedSeats) {
+            return res.status(404).json({
+                success: false,
+                message: 'Seats not found'
+            });
+        }
+
+        // Save the updated train document
+        await train.save();
+
+        // Update booking status to cancelled
+        booking.status = 'cancelled';
+        await booking.save();
+
+        // Log successful update
+        console.log(`Successfully cancelled booking ${bookingId} and removed date ${selectedDateStr}`);
+
+        res.status(200).json({
+            success: true,
+            message: 'Booking cancelled successfully'
+        });
+
+    } catch (error) {
+        console.error('Error in cancelBooking:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error cancelling booking',
+            error: error.message
         });
     }
 };
