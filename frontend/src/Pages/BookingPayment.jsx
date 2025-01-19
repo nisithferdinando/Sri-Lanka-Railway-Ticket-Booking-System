@@ -113,7 +113,6 @@ const BookingPayment = () => {
     }
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
@@ -121,8 +120,7 @@ const BookingPayment = () => {
         setLoading(true);
         
         // First attempt to book the seats
-
-        const userId= localStorage.getItem('userId');
+        const userId = localStorage.getItem('userId');
         const username = localStorage.getItem('username');
         const response = await axiosInstance.post(
           `/api/trains/${bookingDetails.trainId}/compartment/${bookingDetails.compartment}/book`,
@@ -135,12 +133,22 @@ const BookingPayment = () => {
         );
   
         if (response.data.success) {
+          // Save booking details in the new API
+          const bookingResponse = await axiosInstance.post('/api/booking/saveBooking', {
+            userId,
+            trainName: bookingDetails.trainDetails.trainName, // Replace with actual train name
+            compartment: bookingDetails.compartment,
+            seatNumbers: bookingDetails.selectedSeats,
+            selectedDate: bookingDetails.selectedDate,
+            status: 'active'
+          });
+                     
           // If booking successful, show success message
-          
           navigate('/tickets', { 
             state: {
               bookingDetails,
-              bookingResponse: response.data
+              bookingResponse: response.data,
+              bookingId: bookingResponse.data.bookingId
             }
           });
         } else {
@@ -154,6 +162,8 @@ const BookingPayment = () => {
       }
     }
   };
+  
+  
 
   const handleCancel= async()=>{
     setLoading(true);

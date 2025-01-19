@@ -1,8 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../Utilities/axiosInstance';
-import { Card, CardContent, CardHeader, Button, TextField, Alert, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip, IconButton, Divider, Typography, Box, CircularProgress } from '@mui/material';
-import { Check, Edit, Close, CancelOutlined, Person, Email } from '@mui/icons-material';
+import { 
+    Card, 
+    CardContent, 
+    CardHeader, 
+    Button, 
+    TextField, 
+    Alert, 
+    Table, 
+    TableBody, 
+    TableCell, 
+    TableContainer, 
+    TableHead, 
+    TableRow, 
+    Paper, 
+    Chip, 
+    IconButton, 
+    Divider, 
+    Typography, 
+    Box, 
+    CircularProgress 
+} from '@mui/material';
+import { 
+    Check, 
+    Edit, 
+    Close, 
+    CancelOutlined, 
+    Person, 
+    Email 
+} from '@mui/icons-material';
 import HomeIcon from '@mui/icons-material/Home';
 import Toast from '../Utilities/Toast';
 import LoadingOverlay from '../Utilities/LoadingOverlay';
@@ -18,33 +45,14 @@ const Account = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [toast, setToast] = useState({ show: false, message: '', type: 'error' });
-    
+    const [bookings, setBookings] = useState([]);
+    const [isLoadingBookings, setIsLoadingBookings] = useState(false);
+   
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
         email: '',
     });
-
-    const [bookings] = useState([
-        {
-            bookingId: "BK001",
-            bookingDate: "2025-01-14",
-            trainName: "Express 123",
-            compartment: "A1",
-            seatNumbers: "15, 16",
-            travelDate: "2025-02-01",
-            status: "active",
-        },
-        {
-            bookingId: "BK002",
-            bookingDate: "2025-01-10",
-            trainName: "Super Fast 456",
-            compartment: "B2",
-            seatNumbers: "23",
-            travelDate: "2025-01-12",
-            status: "cancelled",
-        },
-    ]);
 
     const handleHomeClick = async () => {
         setIsNavigating(true);
@@ -55,11 +63,12 @@ const Account = () => {
     const showToast = (message, type = 'error') => {
         setToast({ show: true, message, type });
     };
-    
+   
     const hideToast = () => {
         setToast({ show: false, message: '', type: 'error' });
     };
 
+    // Fetch user account details
     useEffect(() => {
         const fetchAccount = async () => {
             const token = localStorage.getItem('token');
@@ -78,20 +87,37 @@ const Account = () => {
                     email: userData.email,
                 });
             } catch (error) {
-                console.error(error);
+                console.error('Error fetching account:', error);
+                showToast('Failed to load account details', 'error');
                 navigate('/login');
             }
         };
-
         fetchAccount();
     }, [navigate]);
+
+    // Fetch booking history
+    useEffect(() => {
+        const fetchBookings = async () => {
+            setIsLoadingBookings(true);
+            try {
+                const response = await axiosInstance.get('/api/booking/history');
+                setBookings(response.data.bookings);
+            } catch (error) {
+                console.error('Error fetching bookings:', error);
+                showToast('Failed to load booking history', 'error');
+            } finally {
+                setIsLoadingBookings(false);
+            }
+        };
+
+        fetchBookings();
+    }, []);
 
     const handleUpdate = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         setError('');
         setSuccess('');
-
         try {
             const response = await axiosInstance.put('/api/auth/account', formData);
             setUser(response.data.user);
@@ -99,24 +125,33 @@ const Account = () => {
             await new Promise(resolve => setTimeout(resolve, 800));
             setIsEditing(false);
         } catch (error) {
-            console.error(error);
-            showToast('email already exists', 'error');
+            console.error('Error updating account:', error);
+            showToast(error.response?.data?.message || 'Failed to update account', 'error');
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleCancelBooking = (bookingId) => {
-        console.log('Cancelling booking:', bookingId);
+    const handleCancelBooking = async (bookingId) => {
+        try {
+            await axiosInstance.post(`/api/bookings/${bookingId}/cancel`);
+            // Refresh booking history
+            const response = await axiosInstance.get('/api/bookings/history');
+            setBookings(response.data.bookings);
+            showToast('Booking cancelled successfully', 'success');
+        } catch (error) {
+            console.error('Error cancelling booking:', error);
+            showToast('Failed to cancel booking', 'error');
+        }
     };
 
     const getStatusChipColor = (status) => {
-        switch (status) {
+        switch (status.toLowerCase()) {
             case 'active':
                 return 'success';
             case 'expired':
                 return 'error';
-            case 'canceled':
+            case 'cancelled':
                 return 'default';
             default:
                 return 'primary';
@@ -127,7 +162,7 @@ const Account = () => {
         <div>
             <Navbar />
             <div className="p-6 bg-gray-100 min-h-screen">
-                {/*isLoading && <LoadingOverlay />*/}
+                {isLoading && <LoadingOverlay />}
                 {toast.show && (
                     <Toast
                         message={toast.message}
@@ -135,7 +170,7 @@ const Account = () => {
                         onClose={hideToast}
                     />
                 )}
-                
+               
                 <div className="max-w-7xl mx-auto space-y-6 mt-8">
                     {/* Home Button */}
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
@@ -145,7 +180,7 @@ const Account = () => {
                             startIcon={isNavigating ? <CircularProgress size={20} color="inherit" /> : <HomeIcon />}
                             onClick={handleHomeClick}
                             disabled={isNavigating}
-                            sx={{ 
+                            sx={{
                                 borderRadius: '8px',
                                 padding: '8px 16px',
                                 boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
@@ -161,7 +196,7 @@ const Account = () => {
 
                     {/* Profile Card */}
                     <Card elevation={3}>
-                        <CardHeader 
+                        <CardHeader
                             title={
                                 <Typography variant="h5" component="h2">
                                     Profile Information
@@ -180,7 +215,6 @@ const Account = () => {
                             }
                         />
                         <Divider />
-                        {/* Profile Details */}
                         <CardContent>
                             {!isEditing ? (
                                 <Box className="space-y-4">
@@ -263,8 +297,8 @@ const Account = () => {
                     </Card>
 
                     {/* Booking History */}
-                    <Card elevation={3} sx={{ boxShadow: "revert" }}>
-                        <CardHeader 
+                    <Card elevation={3}>
+                        <CardHeader
                             title={
                                 <Typography variant="h5" component="h2">
                                     Booking History
@@ -277,47 +311,63 @@ const Account = () => {
                                 <Table>
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell sx={{ fontWeight: 'bold', fontSize: '16px' }}>Booking ID</TableCell>
-                                            <TableCell sx={{ fontWeight: 'bold', fontSize: '16px' }}>Booking Date</TableCell>
-                                            <TableCell sx={{ fontWeight: 'bold', fontSize: '16px' }}>Train Name</TableCell>
-                                            <TableCell sx={{ fontWeight: 'bold', fontSize: '16px' }}>Compartment</TableCell>
-                                            <TableCell sx={{ fontWeight: 'bold', fontSize: '16px' }}>Seat Numbers</TableCell>
-                                            <TableCell sx={{ fontWeight: 'bold', fontSize: '16px' }}>Travel Date</TableCell>
-                                            <TableCell sx={{ fontWeight: 'bold', fontSize: '16px' }}>Status</TableCell>
-                                            <TableCell sx={{ fontWeight: 'bold', fontSize: '16px' }}>Cancel Booking</TableCell>
+                                            <TableCell sx={{ fontWeight: 'bold' }}>Booking ID</TableCell>
+                                            <TableCell sx={{ fontWeight: 'bold' }}>Booking Date</TableCell>
+                                            <TableCell sx={{ fontWeight: 'bold' }}>Train Name</TableCell>
+                                            <TableCell sx={{ fontWeight: 'bold' }}>Compartment</TableCell>
+                                            <TableCell sx={{ fontWeight: 'bold' }}>Seat Numbers</TableCell>
+                                            <TableCell sx={{ fontWeight: 'bold' }}>Travel Date</TableCell>
+                                            <TableCell sx={{ fontWeight: 'bold' }}>Status</TableCell>
+                                            <TableCell sx={{ fontWeight: 'bold' }}>Actions</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {bookings.map((booking) => (
-                                            <TableRow key={booking.bookingId}>
-                                                <TableCell>{booking.bookingId}</TableCell>
-                                                <TableCell>{booking.bookingDate}</TableCell>
-                                                <TableCell>{booking.trainName}</TableCell>
-                                                <TableCell>{booking.compartment}</TableCell>
-                                                <TableCell>{booking.seatNumbers}</TableCell>
-                                                <TableCell>{booking.travelDate}</TableCell>
-                                                <TableCell>
-                                                    <Chip 
-                                                        label={booking.status}
-                                                        color={getStatusChipColor(booking.status)}
-                                                        size="small"
-                                                        sx={{ cursor: "default" }}
-                                                    />
-                                                </TableCell>
-                                                <TableCell>
-                                                    {booking.status === 'active' && (
-                                                        <IconButton
-                                                            color="error"
-                                                            size="small"
-                                                            onClick={() => handleCancelBooking(booking.bookingId)}
-                                                            title="Cancel Booking"
-                                                        >
-                                                            <CancelOutlined />
-                                                        </IconButton>
-                                                    )}
+                                        {isLoadingBookings ? (
+                                            <TableRow>
+                                                <TableCell colSpan={8} align="center">
+                                                    <CircularProgress size={24} />
                                                 </TableCell>
                                             </TableRow>
-                                        ))}
+                                        ) : bookings.length === 0 ? (
+                                            <TableRow>
+                                                <TableCell colSpan={8} align="center">
+                                                    <Typography variant="body1" color="textSecondary">
+                                                        No booking history found
+                                                    </Typography>
+                                                </TableCell>
+                                            </TableRow>
+                                        ) : (
+                                            bookings.map((booking) => (
+                                                <TableRow key={booking.bookingId}>
+                                                    <TableCell>{booking.bookingId}</TableCell>
+                                                    <TableCell>{booking.bookingDate}</TableCell>
+                                                    <TableCell>{booking.trainName}</TableCell>
+                                                    <TableCell>{booking.compartment}</TableCell>
+                                                    <TableCell>{booking.seatNumbers}</TableCell>
+                                                    <TableCell>{booking.travelDate}</TableCell>
+                                                    <TableCell>
+                                                        <Chip
+                                                            label={booking.status}
+                                                            color={getStatusChipColor(booking.status)}
+                                                            size="small"
+                                                            sx={{ cursor: "default" }}
+                                                        />
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {booking.status.toLowerCase() === 'active' && (
+                                                            <IconButton
+                                                                color="error"
+                                                                size="small"
+                                                                onClick={() => handleCancelBooking(booking.bookingId)}
+                                                                title="Cancel Booking"
+                                                            >
+                                                                <CancelOutlined />
+                                                            </IconButton>
+                                                        )}
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))
+                                        )}
                                     </TableBody>
                                 </Table>
                             </TableContainer>
