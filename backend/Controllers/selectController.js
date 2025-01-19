@@ -54,7 +54,7 @@ exports.trainBooking= async (req, res) => {
         if (unavailableSeats.length > 0) {
             return res.status(400).json({ error: `Seats ${unavailableSeats.join(', ')} are not available or already booked.` });
         }
-
+           
         
         if (!compartment.arrivalTime) {
             compartment.arrivalTime = train.arrives; 
