@@ -6,6 +6,7 @@ const authRoutes=require('./Routes/authRoutes');
 const trainRoutes = require('./Routes/trainRoutes');
 const selectRoutes = require('./Routes/selectRoutes');
 const bookingRoutes=require('./Routes/bookingRoutes')
+const paymentRoutes= require('./Routes/paymentRoutes')
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use('/api/auth',authRoutes);
 app.use('/api/trains', trainRoutes); 
 app.use('/api/trains',selectRoutes);
 app.use('/api/booking',bookingRoutes);
+app.use('/api/payment', paymentRoutes);
 
 
 const PORT= process.env.PORT || 8000;
