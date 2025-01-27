@@ -129,7 +129,6 @@ const SeatBookingS = () => {
         compartment: selectedCompartment,
         selectedDate,
         trainDetails: train,
-        
       }
     });
     };
@@ -164,7 +163,7 @@ const SeatBookingS = () => {
       )}
         <div className="mt-14">
           <h1 className="text-3xl font-bold mx-auto text-center">
-           දුම්රිය: {train?.trainNameS || "Loading..."}
+           දුම්රිය: {train?.trainName || "Loading..."}
           </h1>
           <h2 className='text-lg text-center font-sans text-blue-700 mt-4'>දිනය: {selectedDate}</h2>
           <div className="text-xl font-semibold flex gap-x-8 justify-center mt-8">

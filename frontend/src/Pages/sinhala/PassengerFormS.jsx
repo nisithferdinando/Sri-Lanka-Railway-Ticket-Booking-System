@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
 import LoadingOverlay from '../../Utilities/LoadingOverlay';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
@@ -22,7 +21,7 @@ const PassengerFormS = () => {
   const saveFormData = (data) => {
     sessionStorage.setItem('passengerFormData', JSON.stringify(data));
   };
-  
+
   const initialFormData = () => {
     const initialPrimary = {
       type: 'primary',
@@ -135,7 +134,8 @@ const PassengerFormS = () => {
         trainId,
         compartment,
         selectedDate,
-        trainDetails
+        trainDetails,
+        selectedSeats,
       };
       setLoading(false);
       navigate('/review-bookingS', { state: bookingDetails });
@@ -160,7 +160,7 @@ const PassengerFormS = () => {
         <h1 className="text-2xl font-bold text-center mb-6 text-slate-700">මගී විස්තර</h1>
         <div className="mb-4 flex flex-col justify-center items-center bg-slate-200 rounded-lg p-4 text-slate-800">
           <div className="font-semibold flex justify-center">
-          දුම්රිය: <span className="font-normal ml-1">{trainDetails?.trainNameS}</span>
+          දුම්රිය: <span className="font-normal ml-1">{trainDetails?.trainName}</span>
           </div>
           <div className="font-semibold flex justify-center">
           දිනය: <span className="font-normal ml-1">{selectedDate}</span>

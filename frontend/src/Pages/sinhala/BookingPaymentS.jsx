@@ -1,43 +1,188 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import Footer from "../../Components/Footer/Footer";
 import { CreditCard, Loader } from 'lucide-react';
 import LoadingOverlay from '../../Utilities/LoadingOverlay';
 import Navbars from './Navbars';
+import axiosInstance from '../../Utilities/axiosInstance';
+
+const stripePromise = loadStripe('pk_test_51QDRwlCv9h4sHdoFbCahB7FUr4J7Due8oEsyMxlfvSQF0WmxhwRwXS8OG4aWTmqrotwOB6watlY3i6q5aOZxHGVS00sLiQFPF2');
+
+const cardStyle = {
+  style: {
+    base: {
+      color: "#32325d",
+      fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+      fontSmoothing: "antialiased",
+      fontSize: "16px",
+      "::placeholder": {
+        color: "#aab7c4"
+      }
+    },
+    invalid: {
+      color: "#fa755a",
+      iconColor: "#fa755a"
+    }
+  }
+};
+const PaymentForm = ({ bookingDetails, calculateTotals }) => {
+  const stripe = useStripe();
+  const elements = useElements();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [agreed, setAgreed] = useState(false);
+  const [cardComplete, setCardComplete] = useState(false);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!stripe || !elements || !agreed) {
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const userId = localStorage.getItem('userId');
+      const username = localStorage.getItem('username');
+      const { total } = calculateTotals();
+
+      // Create payment intent
+      const intentResponse = await axiosInstance.post('/api/payment/create-payment-intent', {
+        amount: Math.round(total * 100), // Convert to cents
+        currency: 'inr'
+      });
+
+      // Confirm card payment
+      const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(
+        intentResponse.data.clientSecret,
+        {
+          payment_method: {
+            card: elements.getElement(CardElement),
+            billing_details: {
+              name: username,
+            },
+          },
+        }
+      );
+
+      if (stripeError) {
+        setError(stripeError.message);
+        return;
+      }
+
+      // If payment successful, book the seats
+      const bookingResponse = await axiosInstance.post(
+        `/api/trains/${bookingDetails.trainId}/compartment/${bookingDetails.compartment}/book`,
+        {
+          seatNumbers: bookingDetails.selectedSeats,
+          selectedDate: bookingDetails.selectedDate,
+          userId,
+          username,
+          paymentIntentId: paymentIntent.id
+        }
+      );
+
+      if (bookingResponse.data.success) {
+        // Save booking details
+        const savedBooking = await axiosInstance.post('/api/booking/saveBooking', {
+          userId,
+          trainName: bookingDetails.trainDetails.trainName,
+          compartment: bookingDetails.compartment,
+          seatNumbers: bookingDetails.selectedSeats,
+          selectedDate: bookingDetails.selectedDate,
+          status: 'active',
+          paymentIntentId: paymentIntent.id,
+          amount: total
+        });
+
+        // Navigate to success page
+        navigate('/tickets', {
+          state: {
+            bookingDetails,
+            bookingResponse: bookingResponse.data,
+            bookingId: savedBooking.data.bookingId,
+            paymentId: paymentIntent.id
+          }
+        });
+      } else {
+        throw new Error('Booking failed after payment');
+      }
+    } catch (error) {
+      console.error('Payment/Booking Error:', error);
+      setError(error.message || 'An error occurred during payment. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="border rounded-md p-4">
+        <CardElement 
+          options={cardStyle}
+          onChange={(e) => setCardComplete(e.complete)}
+        />
+      </div>
+
+      <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          id="terms"
+          checked={agreed}
+          onChange={(e) => setAgreed(e.target.checked)}
+          className="rounded border-gray-300"
+        />
+        <label htmlFor="terms" className="text-sm text-gray-600">
+          I agree to the terms and conditions
+        </label>
+      </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
+          {error}
+        </div>
+      )}
+
+      <button
+        type="submit"
+        disabled={!stripe || loading || !agreed || !cardComplete}
+        className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 
+                 transition-colors disabled:bg-blue-300 disabled:cursor-not-allowed
+                 flex items-center justify-center gap-2"
+      >
+        {loading ? (
+          <>
+            <Loader className="w-5 h-5 animate-spin" />
+            Processing...
+          </>
+        ) : (
+          <>
+            <CreditCard className="w-5 h-5" />
+            Pay Rs. {calculateTotals().total.toFixed(2)}
+          </>
+        )}
+      </button>
+    </form>
+  );
+};
 
 const BookingPaymentS = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const bookingDetails = location.state;
-  const [agreed, setAgreed] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({});
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    const bookingDetails = location.state;
 
   useEffect(() => {
-    if (!bookingDetails || !bookingDetails.trainDetails) {
-      navigate('/review-booking');
-    }
-  }, [bookingDetails, navigate]);
+     if (!bookingDetails || !bookingDetails.trainDetails) {
+       navigate('/');
+     }
+   }, [bookingDetails, navigate]);
 
-  if (!bookingDetails || !bookingDetails.trainDetails) {
-    return (
-      <div>
-        <Navbars />
-        <div className="max-w-4xl mx-auto p-6 mt-14">
-          <h1 className="text-3xl font-bold text-center mb-6">Loading...</h1>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
-
-  const [paymentDetails, setPaymentDetails] = useState({
-    cardHolder: '',
-    cardNumber: '',
-    expiryMonth: '',
-    expiryYear: '',
-    cvc: ''
-  });
 
   const getCompartmentPrice = () => {
     try {
@@ -64,65 +209,32 @@ const BookingPaymentS = () => {
     }
   };
 
-  const { pricePerTicket, subtotal, processingFee, total } = calculateTotals();
+  const handleCancel = async () => {
+    setLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    navigate('/');
+    setLoading(false);
+  };
 
+  if (!bookingDetails || !bookingDetails.trainDetails) {
+    return (
+      <div>
+        <Navbar />
+        <div className="max-w-4xl mx-auto p-6 mt-14">
+          <h1 className="text-3xl font-bold text-center mb-6">Loading...</h1>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+
+  const { pricePerTicket, subtotal, processingFee, total } = calculateTotals();
   const bookingDate = new Date().toLocaleDateString();
 
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!agreed) {
-      newErrors.terms = 'You must agree to the terms and conditions';
-    }
-
-    if (!paymentDetails.cardHolder.trim()) {
-      newErrors.cardHolder = 'Card holder name is required';
-    }
-
-    if (!paymentDetails.cardNumber.match(/^\d{16}$/)) {
-      newErrors.cardNumber = 'Card number must be 16 digits';
-    }
-
-    if (!paymentDetails.expiryMonth) {
-      newErrors.expiryMonth = 'Expiry month is required';
-    }
-
-    if (!paymentDetails.expiryYear) {
-      newErrors.expiryYear = 'Expiry year is required';
-    }
-
-    if (!paymentDetails.cvc.match(/^\d{3}$/)) {
-      newErrors.cvc = 'CVC must be 3 digits';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setPaymentDetails(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (validateForm()) {
-      setLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setLoading(false);
-      navigate('/confirmation');
-    }
-  };
-
-  const renderSeatNumbers = () => {
+ /* const renderSeatNumbers = () => {
     return bookingDetails.passengers.map(p => p.seatNumber).join(', ');
-  };
+  }; */
 
   return (
     <div>
@@ -135,9 +247,9 @@ const BookingPaymentS = () => {
           <div className="md:w-1/2 bg-white shadow-md rounded-lg p-6">
             <h2 className="text-lg font-semibold mb-4">ගමන් සාරාංශය</h2>
             <div className="space-y-3 mb-6">
-              <p><span className="font-semibold text-sm">දුම්රිය:</span> {bookingDetails.trainDetails.trainNameS}</p>
+              <p><span className="font-semibold text-sm">දුම්රිය:</span> {bookingDetails.trainDetails.trainName}</p>
               <p><span className="font-semibold text-sm">මැදිරිය:</span> {bookingDetails.compartment}</p>
-              <p><span className="font-semibold text-sm">ආසන අංක:</span> {renderSeatNumbers()}</p>
+              <p><span className="font-semibold text-sm">ආසන අංක:</span> {bookingDetails.selectedSeats.join(', ')}</p>
               <p><span className="font-semibold text-sm">ගමන් දිනය:</span> {bookingDetails.selectedDate}</p>
               <p><span className="font-semibold text-sm">අනවුම් දිනය:</span> {bookingDate}</p>
               <p><span className="font-semibold text-sm">මූලික සම්බන්ධාකරුවා:</span> {bookingDetails.passengers[0].email}</p>
@@ -166,118 +278,23 @@ const BookingPaymentS = () => {
             </div>
           </div>
 
-          <div className="md:w-1/2 bg-white shadow-md rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-4">Payment Details</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-gray-700 mb-2">Card Holder's Name</label>
-                <input
-                  type="text"
-                  name="cardHolder"
-                  className={`w-full border rounded-lg p-2 ${
-                    errors.cardHolder ? 'border-red-500' : ''
-                  }`}
-                  value={paymentDetails.cardHolder}
-                  onChange={handleInputChange}
-                />
-                {errors.cardHolder && <p className="text-red-500 text-sm">{errors.cardHolder}</p>}
-              </div>
-              <div>
-                <label className="block text-gray-700 mb-2">
-                  <div className="flex justify-between items-center">
-                    <span>Card Number</span>
-                    <div className="flex gap-2">
-                      <CreditCard className="h-6 w-6 text-gray-500" />
-                    </div>
-                  </div>
-                </label>
-                <input
-                  type="text"
-                  name="cardNumber"
-                  maxLength="16"
-                  className={`w-full border rounded-lg p-2 ${
-                    errors.cardNumber ? 'border-red-500' : ''
-                  }`}
-                  placeholder="XXXX XXXX XXXX XXXX"
-                  value={paymentDetails.cardNumber}
-                  onChange={handleInputChange}
-                  
-                />
-                
-                {errors.cardNumber && <p className="text-red-500 text-sm">{errors.cardNumber}</p>}
-              </div>
-              <div className="flex gap-4">
-                <div className="w-2/3">
-                  <label className="block text-gray-700 mb-2">Expiration Date</label>
-                  <div className="flex gap-2">
-                    <select
-                      name="expiryMonth"
-                      className={`w-full border rounded-lg p-2 ${
-                        errors.expiryMonth ? 'border-red-500' : ''
-                      }`}
-                      value={paymentDetails.expiryMonth}
-                      onChange={handleInputChange}
-                    >
-                      <option value="">Month</option>
-                      {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
-                        <option key={month} value={month.toString().padStart(2, '0')}>
-                          {month.toString().padStart(2, '0')}
-                        </option>
-                      ))}
-                    </select>
-                    <select
-                      name="expiryYear"
-                      className={`w-full border rounded-lg p-2 ${
-                        errors.expiryYear ? 'border-red-500' : ''
-                      }`}
-                      value={paymentDetails.expiryYear}
-                      onChange={handleInputChange}
-                    >
-                      <option value="">Year</option>
-                      {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() + i).map(year => (
-                        <option key={year} value={year}>{year}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                <div className="w-1/3">
-                  <label className="block text-gray-700 mb-2">CVC</label>
-                  <input
-                    type="text"
-                    name="cvc"
-                    maxLength="3"
-                    className={`w-full border rounded-lg p-2 ${
-                      errors.cvc ? 'border-red-500' : ''
-                    }`}
-                    value={paymentDetails.cvc}
-                    onChange={handleInputChange}
-                  />
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="terms"
-                  checked={agreed}
-                  onChange={(e) => {
-                    setAgreed(e.target.checked);
-                    if (errors.terms) setErrors(prev => ({ ...prev, terms: '' }));
-                  }}
-                />
-                <label htmlFor="terms" className="text-sm text-gray-600">
-                  I agree to the terms and conditions
-                </label>
-              </div>
-              {errors.terms && <p className="text-red-500 text-sm">{errors.terms}</p>}
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-blue-300"
-                disabled={loading}
-              >
-                {`Pay Rs. ${total.toFixed(2)}`}
-              </button>
-            </form>
-          </div>
+         <div className="md:w-1/2 bg-white shadow-md rounded-lg p-6">
+                     <h2 className="text-xl font-semibold mb-4">Payment Details</h2>
+                     <Elements stripe={stripePromise}>
+                       <PaymentForm 
+                         bookingDetails={bookingDetails}
+                         calculateTotals={calculateTotals}
+                       />
+                     </Elements>
+         
+                     <button 
+                       className="mt-4 w-full bg-red-500 text-white py-3 rounded-lg 
+                                hover:bg-red-600 transition-colors"
+                       onClick={handleCancel}
+                     >
+                       Cancel Booking
+                     </button>
+                   </div>
         </div>
       </div>
       <Footer />
