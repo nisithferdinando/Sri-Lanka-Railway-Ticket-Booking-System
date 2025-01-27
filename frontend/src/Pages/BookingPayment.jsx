@@ -110,7 +110,11 @@ const PaymentForm = ({ bookingDetails, calculateTotals }) => {
             bookingDetails,
             bookingResponse: bookingResponse.data,
             bookingId: savedBooking.data.bookingId,
-            paymentId: paymentIntent.id
+            paymentId: paymentIntent.id,
+            userId,
+            startStation: bookingDetails.trainDetails.startStation,
+            endStation: bookingDetails.trainDetails.endStation,
+            
           }
         });
       } else {
