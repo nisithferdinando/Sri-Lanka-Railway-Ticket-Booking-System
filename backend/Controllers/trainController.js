@@ -93,6 +93,7 @@ exports.searchS= async (req, res) => {
             departs: train.departs,
             arrives: train.arrives,
             startS: train.startS,
+            trainName:train.trainName,
         }));
 
         res.json(response);

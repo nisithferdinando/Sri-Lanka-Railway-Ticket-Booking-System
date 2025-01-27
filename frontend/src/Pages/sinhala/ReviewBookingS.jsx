@@ -24,20 +24,29 @@ const ReviewBookingS = () => {
 
   const handleProceedToPayment = async () => {
     setLoading(true);
+
+    try{
     // Simulate loading
     await new Promise(resolve => setTimeout(resolve, 1000));
     sessionStorage.removeItem('passengerFormData');
-    setLoading(false);
+    
     navigate('/paymentS', { 
       state: {
-        ...bookingDetails,
         trainDetails: bookingDetails.trainDetails,
         passengers: bookingDetails.passengers,
         compartment: bookingDetails.compartment,
         selectedDate: bookingDetails.selectedDate,
+        selectedSeats: bookingDetails.selectedSeats,
+        trainId: bookingDetails.trainId // Make sure trainId is included
       }
     });
-  };
+  }catch (error) {
+    console.error("Error:", error);
+    alert("An error occurred. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   if (!bookingDetails || !bookingDetails.trainDetails) {
     return (
@@ -104,7 +113,7 @@ const ReviewBookingS = () => {
         <div className="bg-slate-200 rounded-lg p-4 mb-6">
           <h2 className="text-lg font-semibold mb-4">දුම්රිය විස්තර</h2>
           <div className="space-y-2">
-            <p><span className="font-semibold">දුම්රිය:</span> {bookingDetails.trainDetails.trainNameS}</p>
+            <p><span className="font-semibold">දුම්රිය:</span> {bookingDetails.trainDetails.trainName}</p>
             <p><span className="font-semibold">දිනය:</span> {bookingDetails.selectedDate}</p>
             <p><span className="font-semibold">මැදිරිය:</span> {bookingDetails.compartment}</p>
           </div>
