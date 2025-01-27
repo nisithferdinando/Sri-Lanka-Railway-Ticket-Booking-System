@@ -170,7 +170,7 @@ const Account = () => {
             case 'active':
                 return 'success';
             case 'expired':
-                return 'error';
+                return 'primary';
             case 'cancelled':
                 return 'default';
             default:
@@ -182,7 +182,7 @@ const Account = () => {
         <div>
             <Navbar />
             <div className="p-6 bg-gray-100 min-h-screen">
-                {isLoading && <LoadingOverlay />}
+                {isLoading}
                 {toast.show && (
                     <Toast
                         message={toast.message}
