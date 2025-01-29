@@ -117,7 +117,7 @@ const SeatBooking = () => {
     const userId= localStorage.getItem('userId');
     const username = localStorage.getItem('username');
     setLoading(true);
-    // Simulate loading
+    
     await new Promise(resolve => setTimeout(resolve, 1000));
     setLoading(false);
     navigate('/contact-form', {

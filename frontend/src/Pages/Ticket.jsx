@@ -94,7 +94,7 @@ const Ticket = () => {
       doc.setFillColor(255, 255, 255);
       doc.rect(0, 0, doc.internal.pageSize.width, doc.internal.pageSize.height, 'F');
 
-      // Add logo
+      // logo
       doc.addImage(img, 'PNG', 15, 15, 20, 20);
 
       // Title
@@ -108,13 +108,13 @@ const Ticket = () => {
       doc.setTextColor(100, 116, 139);
       doc.text(`Ticket ID: ${ticket.ticketId}`, 40, 35);
 
-      // Add QR Code
+      // QR Code
       const qrCode = qrCodes[ticket.ticketId];
       if (qrCode) {
         doc.addImage(qrCode, 'PNG', 180, 15, 25, 25);
       }
 
-      // Seat Number Box
+      // Seat Number 
       doc.setFillColor(59, 130, 246);
       doc.roundedRect(15, 45, 60, 50, 3, 3, 'F');
       doc.setTextColor(255, 255, 255);
@@ -125,7 +125,7 @@ const Ticket = () => {
       doc.setFontSize(12);
       doc.text(`Compartment: ${ticket.compartment}`, 45, 85, { align: 'center' });
 
-      // Passenger Details Box
+      // Passenger Details
       doc.setFillColor(241, 245, 249);
       doc.roundedRect(85, 45, 55, 50, 3, 3, 'F');
       doc.setTextColor(71, 85, 105);
@@ -136,7 +136,7 @@ const Ticket = () => {
       doc.text(`Booking Date:`, 112.5, 75, { align: 'center' });
       doc.text(ticket.bookingDate, 112.5, 82, { align: 'center' });
 
-      // Journey Details Box
+      // Journey Details
       doc.setFillColor(240, 253, 244);
       doc.roundedRect(150, 45, 55, 50, 3, 3, 'F');
       doc.setTextColor(71, 85, 105);
@@ -146,7 +146,7 @@ const Ticket = () => {
       doc.text(ticket.trainName, 177.5, 65, { align: 'center' });
       doc.text(ticket.travelDate, 177.5, 75, { align: 'center' });
 
-      // Payment ID at bottom
+      // Payment ID
       doc.setTextColor(100, 116, 139);
       doc.setFontSize(10);
       doc.text(`Payment ID: ${ticket.paymentId}`, 15, 105);
@@ -257,7 +257,7 @@ const Ticket = () => {
               </div>
             </div>
 
-            {/* Footer with Payment ID and Download Button */}
+            {/*Download Button */}
             <div className="mt-6 flex items-center justify-between">
               <div className="flex items-center gap-2 text-gray-500 text-sm">
                 <CreditCard size={16} />

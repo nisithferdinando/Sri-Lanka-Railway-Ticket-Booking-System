@@ -75,7 +75,7 @@ const PaymentForm = ({ bookingDetails, calculateTotals }) => {
         return;
       }
 
-      // If payment successful, book the seats
+      // book the seats
       const bookingResponse = await axiosInstance.post(
         `/api/trains/${bookingDetails.trainId}/compartment/${bookingDetails.compartment}/book`,
         {
@@ -100,7 +100,7 @@ const PaymentForm = ({ bookingDetails, calculateTotals }) => {
           amount: total
         });
 
-        // Navigate to success page
+        // Navigate to tickets page
         navigate('/tickets', {
           state: {
             bookingDetails,
