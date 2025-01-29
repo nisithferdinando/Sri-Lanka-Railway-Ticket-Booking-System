@@ -1,35 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../Utilities/axiosInstance';
-import { 
-    Card, 
-    CardContent, 
-    CardHeader, 
-    Button, 
-    TextField, 
-    Alert, 
-    Table, 
-    TableBody, 
-    TableCell, 
-    TableContainer, 
-    TableHead, 
-    TableRow, 
-    Paper, 
-    Chip, 
-    IconButton, 
-    Divider, 
-    Typography, 
-    Box, 
-    CircularProgress 
-} from '@mui/material';
-import { 
-    Check, 
-    Edit, 
-    Close, 
-    CancelOutlined, 
-    Person, 
-    Email 
-} from '@mui/icons-material';
+import { Card, CardContent, CardHeader, Button, TextField, Alert, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Chip, IconButton, Divider, Typography,  Box, CircularProgress } from '@mui/material';
+import { Check, Edit, Close, CancelOutlined, Person, Email} from '@mui/icons-material';
 import HomeIcon from '@mui/icons-material/Home';
 import Toast from '../Utilities/Toast';
 import LoadingOverlay from '../Utilities/LoadingOverlay';

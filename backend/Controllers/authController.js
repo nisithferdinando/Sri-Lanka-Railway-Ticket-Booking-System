@@ -132,7 +132,7 @@ exports.signup = async(req, res)=>{
   // get account api
  exports.getAccount = async (req, res) => {
     try {
-        const user = await User.findById(req.user.id); // Assuming `req.user.id` contains the authenticated user's ID
+        const user = await User.findById(req.user.id); 
         if (!user) {
             return res.status(404).json({ error: true, message: "User not found" });
         }

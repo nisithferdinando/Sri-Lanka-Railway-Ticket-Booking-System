@@ -12,7 +12,6 @@ const ReviewBookingS = () => {
   const [loading, setLoading] = useState(false);
 
   const handleBack = async () => {
-    // Preserve the form data in session storage when going back
     setLoading(true);
     await new Promise(resolve => setTimeout(resolve, 700));
     setLoading(false);
@@ -26,7 +25,6 @@ const ReviewBookingS = () => {
     setLoading(true);
 
     try{
-    // Simulate loading
     await new Promise(resolve => setTimeout(resolve, 1000));
     sessionStorage.removeItem('passengerFormData');
     
@@ -37,7 +35,7 @@ const ReviewBookingS = () => {
         compartment: bookingDetails.compartment,
         selectedDate: bookingDetails.selectedDate,
         selectedSeats: bookingDetails.selectedSeats,
-        trainId: bookingDetails.trainId // Make sure trainId is included
+        trainId: bookingDetails.trainId 
       }
     });
   }catch (error) {

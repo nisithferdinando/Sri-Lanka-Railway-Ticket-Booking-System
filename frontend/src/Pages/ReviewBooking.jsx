@@ -12,7 +12,6 @@ const ReviewBooking = () => {
   const [loading, setLoading] = useState(false);
 
   const handleBack = async () => {
-    // Preserve the form data in session storage when going back
     setLoading(true);
     await new Promise(resolve => setTimeout(resolve, 700));
     sessionStorage.removeItem('passengerFormData');
@@ -25,11 +24,11 @@ const ReviewBooking = () => {
   const handleProceedToPayment = async () => {
     setLoading(true);
     try {
-      // Remove form data from session storage
+      
       await new Promise(resolve => setTimeout(resolve, 700));
       sessionStorage.removeItem('passengerFormData');
       
-      // Navigate to payment with all required booking details
+      
       navigate('/payment', { 
         state: {
           trainDetails: bookingDetails.trainDetails,
@@ -37,7 +36,7 @@ const ReviewBooking = () => {
           compartment: bookingDetails.compartment,
           selectedDate: bookingDetails.selectedDate,
           selectedSeats: bookingDetails.selectedSeats,
-          trainId: bookingDetails.trainId // Make sure trainId is included
+          trainId: bookingDetails.trainId 
         }
       });
     } catch (error) {
@@ -109,7 +108,7 @@ const ReviewBooking = () => {
       <div className="max-w-4xl mx-auto p-6 mt-14">
         <h1 className="text-3xl font-bold text-center mb-6 text-slate-700">Review Booking Details</h1>
 
-        {/* Train Details Card */}
+        {/* Train Details */}
         <div className="bg-slate-200 rounded-lg p-4 mb-6">
           <h2 className="text-xl font-semibold mb-4">Train Details</h2>
           <div className="space-y-2">

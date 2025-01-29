@@ -112,20 +112,17 @@ const HomeS = () => {
       setIsLoading(true);
       await new Promise(resolve => setTimeout(resolve, 1000));
       const selectedTrain = params.row;
-      console.log("Selected Train ID:", selectedTrain.id); // Use `id` instead of `_id`
+      console.log("Selected Train ID:", selectedTrain.id);
       navigate(`/seat-bookingS/${selectedTrain.id}?date=${selectedDateS}`, { state: { selectedTrain } });
       setIsLoading(false);
     };
 
     const columns = [
       
-      { field: 'trainNameS', headerName: 'දුම්රිය', width: 200 },
-       { field: 'startS', headerName: 'ආරම්භය', width: 150 },
-
-     {field:'departs', headerName:"පිටවීම", width:150},
-
-     {field:'arrives', headerName:"පැමිණීම", width:150},
-      
+    { field: 'trainNameS', headerName: 'දුම්රිය', width: 200 },
+    { field: 'startS', headerName: 'ආරම්භය', width: 150 },
+    {field:'departs', headerName:"පිටවීම", width:150},
+    {field:'arrives', headerName:"පැමිණීම", width:150},  
     ];
 
   return (

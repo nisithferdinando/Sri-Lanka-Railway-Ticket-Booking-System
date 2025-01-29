@@ -61,7 +61,7 @@ exports.trainBooking= async (req, res) => {
         }
        
         const expTime = selectedDate;
-
+         // update exp date in seat array
         const expTimes = new Set(); 
         compartment.seats.forEach(seat => {
             if (seatNumbers.includes(seat.seatNumber)) {

@@ -8,10 +8,8 @@ import { CreditCard, Loader } from 'lucide-react';
 import LoadingOverlay from '../Utilities/LoadingOverlay';
 import axiosInstance from '../Utilities/axiosInstance';
 
-// Initialize Stripe with your publishable key
 const stripePromise = loadStripe('pk_test_51QDRwlCv9h4sHdoFbCahB7FUr4J7Due8oEsyMxlfvSQF0WmxhwRwXS8OG4aWTmqrotwOB6watlY3i6q5aOZxHGVS00sLiQFPF2');
 
-// Card element styling
 const cardStyle = {
   style: {
     base: {
@@ -30,7 +28,7 @@ const cardStyle = {
   }
 };
 
-// Payment Form Component
+// Payment Form 
 const PaymentForm = ({ bookingDetails, calculateTotals }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -55,7 +53,7 @@ const PaymentForm = ({ bookingDetails, calculateTotals }) => {
       const username = localStorage.getItem('username');
       const { total } = calculateTotals();
 
-      // Create payment intent
+      //payment intent
       const intentResponse = await axiosInstance.post('/api/payment/create-payment-intent', {
         amount: Math.round(total * 100), // Convert to cents
         currency: 'inr'
@@ -79,7 +77,7 @@ const PaymentForm = ({ bookingDetails, calculateTotals }) => {
         return;
       }
 
-      // If payment successful, book the seats
+      // book the seats
       const bookingResponse = await axiosInstance.post(
         `/api/trains/${bookingDetails.trainId}/compartment/${bookingDetails.compartment}/book`,
         {
@@ -104,7 +102,7 @@ const PaymentForm = ({ bookingDetails, calculateTotals }) => {
           amount: total
         });
 
-        // Navigate to success page
+        // Navigate to tickets page
         navigate('/tickets', {
           state: {
             bookingDetails,

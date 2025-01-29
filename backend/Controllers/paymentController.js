@@ -5,7 +5,7 @@ const createPaymentIntent = async (req, res) => {
     try {
         const { amount } = req.body;
 
-        // Create a PaymentIntent with the order amount and currency
+        // Create a PaymentIntent 
         const paymentIntent = await stripe.paymentIntents.create({
             amount: Math.round(amount),
             currency: 'inr',

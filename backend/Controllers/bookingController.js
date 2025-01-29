@@ -27,13 +27,13 @@ exports.saveBookingDetails = async (req, res) => {
 
 exports.getBookingHistory = async (req, res) => {
     try {
-        const userId = req.user.id; // Assuming you have user info from auth middleware
+        const userId = req.user.id; 
         
-        // Get all bookings for the user
+        
         let bookings = await Booking.find({ userId })
-            .sort({ bookingDate: -1 }); // Sort by booking date, most recent first
+            .sort({ bookingDate: -1 }); 
 
-        // Current date for comparison
+        
         const currentDate = new Date();
 
         // Update status for expired bookings
@@ -117,19 +117,19 @@ exports.cancelBooking = async (req, res) => {
             });
         }
 
-        // Convert seatNumbers string to array if necessary
+        
         const seatNumbersArray = Array.isArray(booking.seatNumbers)
             ? booking.seatNumbers
             : booking.seatNumbers.split(',').map(seat => seat.trim());
 
-        // Convert booking selected date to YYYY-MM-DD format for comparison
+        // Convert booking selected date 
         const selectedDateStr = new Date(booking.selectedDate).toISOString().split('T')[0];
         
-        // Remove the selected date from exp array for each seat
+        // Remove the selected date from exp array 
         let updatedSeats = false;
         compartment.seats.forEach(seat => {
             if (seatNumbersArray.includes(seat.seatNumber)) {
-                // Convert each exp date to YYYY-MM-DD format for comparison
+                // Convert each exp date 
                 seat.exp = seat.exp.filter(date => {
                     const expDateStr = new Date(date).toISOString().split('T')[0];
                     return expDateStr !== selectedDateStr;
@@ -145,14 +145,13 @@ exports.cancelBooking = async (req, res) => {
             });
         }
 
-        // Save the updated train document
+        // Save the train
         await train.save();
 
         // Update booking status to cancelled
         booking.status = 'cancelled';
         await booking.save();
 
-        // Log successful update
         console.log(`Successfully cancelled booking ${bookingId} and removed date ${selectedDateStr}`);
 
         res.status(200).json({
