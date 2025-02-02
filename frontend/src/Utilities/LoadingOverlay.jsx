@@ -1,5 +1,5 @@
 import React from 'react';
-import { LoaderCircle  } from 'lucide-react';
+import { LoaderCircle } from 'lucide-react';
 
 const LoadingOverlay = () => {
   return (

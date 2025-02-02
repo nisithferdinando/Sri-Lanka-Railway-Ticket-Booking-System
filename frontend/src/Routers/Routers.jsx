@@ -14,6 +14,7 @@ import ReviewBookingS from '../Pages/sinhala/ReviewBookingS';
 import BookingPaymentS from '../Pages/sinhala/BookingPaymentS';
 import Account from '../Pages/Account';
 import Ticket from '../Pages/Ticket';
+import LandingPage from '../Pages/LandingPage';
 
 
 
@@ -34,8 +35,9 @@ const Routers = () => {
           
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path='/landing' element={<LandingPage/>}/>
           
-    
+
           {/* Protected Routes */}
           <Route
           path='/'
