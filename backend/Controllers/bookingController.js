@@ -5,7 +5,7 @@ const Train = require('../models/Train');
 
 
 exports.saveBookingDetails = async (req, res) => {
-  const { userId, trainName, compartment, seatNumbers, selectedDate, status } = req.body;
+  const { userId, trainName, compartment, seatNumbers, selectedDate, status, email } = req.body;
 
   try {
     const newBooking = new Booking({
@@ -15,7 +15,8 @@ exports.saveBookingDetails = async (req, res) => {
       compartment,
       seatNumbers,
       selectedDate,
-      status
+      status,
+      email
     });
 
     await newBooking.save();
