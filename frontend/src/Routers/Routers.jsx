@@ -15,6 +15,8 @@ import BookingPaymentS from '../Pages/sinhala/BookingPaymentS';
 import Account from '../Pages/Account';
 import Ticket from '../Pages/Ticket';
 import LandingPage from '../Pages/LandingPage';
+import AdminLogin from '../Pages/admin/adminLogin';
+import AdminDashboard from '../Pages/admin/adminDashboard';
 
 
 
@@ -36,6 +38,8 @@ const Routers = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path='/landing' element={<LandingPage/>}/>
+          <Route path='/adminPortalLogin' element={<AdminLogin/>}/>
+          <Route path='/adminDashboard' element={<AdminDashboard/>}/>
           
 
           {/* Protected Routes */}
