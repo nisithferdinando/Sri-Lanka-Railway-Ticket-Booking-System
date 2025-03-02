@@ -185,8 +185,13 @@ const Ticket = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <Navbar />
-      
+      <div className='flex justify-end mt-8 mr-12'>
+          <button 
+          onClick={() => navigate('/')}
+          className='px-3 py-2 bg-slate-200 rounded-lg text-slate-800 text-lg hover:bg-slate-400 transition-colors duration-200 '>Home</button>
+          </div>
       <div className="max-w-[875px] mx-auto p-6 mt-14">
+
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-blue-600 text-center">Your Train Tickets</h1>
           <p className="text-center text-gray-600 mt-2">Your journey begins here</p>
