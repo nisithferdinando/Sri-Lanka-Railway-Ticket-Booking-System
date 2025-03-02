@@ -152,7 +152,7 @@ const SeatBooking = () => {
   }
 
   return (
-    <div>
+    <div className='flex flex-col min-h-screen'>
       <Navbar />
       {loading && <LoadingOverlay/>}
       {toast.show && (
@@ -167,21 +167,21 @@ const SeatBooking = () => {
           Train Name: {train?.trainName || "Loading..."}
         </h1>
         <h2 className='text-lg text-center font-sans text-blue-700 mt-4'>Date: {selectedDate}</h2>
-        <div className="text-xl font-semibold flex gap-x-8 justify-center mt-8">
+        <div className="text-xl font-semibold flex gap-x-8 justify-center mt-8 px-2 py-2 bg-slate-300 w-[400px] mx-auto rounded-lg">
           <h2 className="text-slate-700 ">Start: {train?.startStation}</h2>
           <h2 className="text-slate-700">End: {train?.endStation}</h2>
         </div>
-        <div className='text-lg font-normal flex gap-x-8 justify-center items-center mt-2'>
+        <div className='text-lg font-normal flex gap-x-8 justify-center mt-2 bg-blue-300 w-[400px] mx-auto rounded-lg px-2 py-2'>
           <h2 className='text-slate-900'>Departs: {train?.departs}</h2>
           <h2 className='text-slate-900'>Arrives: {train?.arrives}</h2>
         </div>
         {train?.compartments ? (
-          <div>
+          <div className='bg-slate-50 px-3 py-2 rounded-lg mt-8 w-[900px] mx-auto'>
               <h1 className='mt-7 text-lg text-slate-900 font-bold text-center'>Please Select Compartment</h1>
               
             <div className="flex justify-center items-center">
               <select
-                className="border-2 px-10 py-2 mt-4 outline-blue-400 border-blue-500 rounded-lg"
+                className="border-2 px-10 py-2 mt-8 outline-blue-400 border-blue-500 rounded-lg"
                 onChange={(e) => {
                   setSelectedCompartment(e.target.value);
                   setSelectedSeats([]);

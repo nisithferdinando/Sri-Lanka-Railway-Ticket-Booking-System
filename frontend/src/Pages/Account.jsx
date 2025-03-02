@@ -6,6 +6,7 @@ import { Check, Edit, Close, CancelOutlined, Person, Email} from '@mui/icons-mat
 import HomeIcon from '@mui/icons-material/Home';
 import Toast from '../Utilities/Toast';
 import LoadingOverlay from '../Utilities/LoadingOverlay';
+import Swal from 'sweetalert2';
 import Navbar from '../Components/Navbar/Navbar';
 import Footer from '../Components/Footer/Footer';
 
@@ -106,38 +107,51 @@ const Account = () => {
         }
     };
 
-    const handleCancelBooking = async (bookingId) => {
-        if (!window.confirm('Are you sure you want to cancel this booking?')) {
-            return;
-        }
+const handleCancelBooking = async (bookingId) => {
+    const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you really want to cancel this booking?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, cancel it!',
+        cancelButtonText: 'No, keep it'
+    });
 
-        setIsCancelling(true);
-        try {
-            const response = await axiosInstance.post(`/api/booking/${bookingId}/cancel`);
-            
-            if (response.data.success) {
-                // Update the local bookings state to reflect cancellation
-                setBookings(prevBookings => 
-                    prevBookings.map(booking => 
-                        booking.bookingId === bookingId
-                            ? { ...booking, status: 'cancelled' }
-                            : booking
-                    )
-                );
-                showToast('Booking cancelled successfully', 'success');
-            } else {
-                showToast(response.data.message || 'Failed to cancel booking', 'error');
-            }
-        } catch (error) {
-            console.error('Error cancelling booking:', error);
-            showToast(
-                error.response?.data?.message || 'Failed to cancel booking', 
-                'error'
+    if (!result.isConfirmed) {
+        return;
+    }
+
+    setIsCancelling(true);
+    try {
+        const response = await axiosInstance.post(`/api/booking/${bookingId}/cancel`);
+        
+        if (response.data.success) {
+            setBookings(prevBookings =>
+                prevBookings.map(booking =>
+                    booking.bookingId === bookingId
+                        ? { ...booking, status: 'cancelled' }
+                        : booking
+                )
             );
-        } finally {
-            setIsCancelling(false);
+
+            showToast('Booking cancelled successfully', 'success');
+        } else {
+            showToast(response.data.message || 'Failed to cancel booking', 'error');
         }
-    };
+    } catch (error) {
+        console.error('Error cancelling booking:', error);
+        showToast(
+            error.response?.data?.message || 'Failed to cancel booking', 
+            'error'
+        );
+    } finally {
+        setIsCancelling(false);
+    }
+};
+
+    
     const getStatusChipColor = (status) => {
         switch (status.toLowerCase()) {
             case 'active':

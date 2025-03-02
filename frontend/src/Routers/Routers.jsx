@@ -23,7 +23,7 @@ const isAuthenticated = () => {
 };
 
 const ProtectedRoute = ({ element }) => {
-  return isAuthenticated() ? element : <Navigate to="/login" />;
+  return isAuthenticated() ? element : <Navigate to="/landing" />;
 };
 
 const Routers = () => {

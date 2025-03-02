@@ -142,7 +142,7 @@ const Home = () => {
   ];  
 
   return (
-    <div>
+    <div className='flex flex-col min-h-screen'>
       <Navbar />
       
       {showToast && (
@@ -154,12 +154,12 @@ const Home = () => {
         />
         
       )}
-      <div className='w-full'>
+      <div className='w-full flex-grow'>
         <div className='flex justify-end mt-4 mr-24 gap-4 items-center'>
         <div className="flex items-center gap-2">
     
     <button
-        className="text-lg font-sans text-blue-500 cursor-pointer hover:text-blue-400 flex gap-1 items-center"
+        className="text-lg font-sans bg-slate-100 px-3 py-1 rounded-lg text-blue-500 cursor-pointer hover:text-blue-400 flex gap-1 items-center"
         onClick={handleAcccount}
     >
       <PersonIcon fontSize="large" style={{ color: '#8000ff', marginTop:"1" }} />
@@ -261,9 +261,9 @@ const Home = () => {
 
         {isLoading && <LoadingOverlay/>}
       </div>
-      <div className='mt-36'>
+      
         <Footer />
-      </div>
+      
     </div>
   );
 };

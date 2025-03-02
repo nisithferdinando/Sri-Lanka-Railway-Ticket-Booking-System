@@ -59,12 +59,12 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className='flex flex-col min-h-screen'>
       <Navbar/>
       {loading && <LoadingOverlay/>}
      
-      <div className='flex justify-center items-center'>
-        <div className='bg-white border-[1.5px] drop-shadow-md rounded-lg px-16 py-16 mt-24 outline-none'>
+      <div className='flex justify-center items-center flex-grow'>
+        <div className='bg-white border-[1.5px] drop-shadow-md rounded-lg px-16 py-16 my-12 outline-none'>
           <form onSubmit={handleLogin}>
             <div className='mt-4'>
               <p className='text-xl font-medium text-gray-500 mb-4'>Email</p>
@@ -103,9 +103,9 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <div className='mt-20'>
-        <Footer />
-      </div>
+      
+       <Footer/>
+      
     </div>
   );
 }
