@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bookingSchema = new mongoose.Schema({
   bookingId: { type: String, unique: true },
   userId: String,
+  email: String,
   trainName: String,
   compartment: String,
   seatNumbers: [String],

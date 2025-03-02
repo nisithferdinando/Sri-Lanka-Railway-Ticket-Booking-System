@@ -97,6 +97,7 @@ const PaymentForm = ({ bookingDetails, calculateTotals }) => {
           compartment: bookingDetails.compartment,
           seatNumbers: bookingDetails.selectedSeats,
           selectedDate: bookingDetails.selectedDate,
+          email: bookingDetails.passengers[0].email,
           status: 'active',
           paymentIntentId: paymentIntent.id,
           amount: total
@@ -112,6 +113,7 @@ const PaymentForm = ({ bookingDetails, calculateTotals }) => {
             userId,
             startStation: bookingDetails.trainDetails.startStation,
             endStation: bookingDetails.trainDetails.endStation,
+            email: bookingDetails.passengers[0].email,
             
           }
         });
@@ -177,7 +179,7 @@ const PaymentForm = ({ bookingDetails, calculateTotals }) => {
   );
 };
 
-// Main Component
+
 const BookingPayment = () => {
   const location = useLocation();
   const navigate = useNavigate();
