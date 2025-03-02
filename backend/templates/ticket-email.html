@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Train Tickets</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 650px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      text-align: center;
+      padding: 20px 0;
+      border-bottom: 1px solid #eaeaea;
+    }
+    .header img {
+      max-height: 60px;
+    }
+    .header h1 {
+      color: #1e67d2;
+      margin: 10px 0 5px;
+      font-size: 24px;
+    }
+    .header p {
+      color: #666;
+      margin: 0;
+      font-size: 16px;
+    }
+    .ticket {
+      margin: 30px 0;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .ticket-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      background-color: #f5f9ff;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .ticket-id {
+      color: #666;
+      font-size: 14px;
+    }
+    .ticket-content {
+      display: flex;
+      padding: 20px;
+    }
+    .seat-info {
+      width: 120px;
+      background-color: #3b82f6;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-right: 20px;
+      border-radius: 6px;
+    }
+    .seat-number {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    .details {
+      flex: 1;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .detail-box {
+      width: calc(50% - 10px);
+      margin-bottom: 15px;
+      padding: 15px;
+      border-radius: 6px;
+    }
+    .journey-details {
+      background-color: #f0fdf4;
+    }
+    .passenger-details {
+      background-color: #eff6ff;
+    }
+    .detail-box h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      color: #4b5563;
+      font-size: 16px;
+    }
+    .detail-box p {
+      margin: 5px 0;
+      color: #4b5563;
+    }
+    .qr-code {
+      padding: 10px;
+      background-color: white;
+    }
+    .qr-code img {
+      width: 100px;
+      height: 100px;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #eaeaea;
+      color: #666;
+      font-size: 14px;
+    }
+    .payment-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #f8fafc;
+      font-size: 14px;
+      color: #64748b;
+    }
+    @media (max-width: 600px) {
+      .ticket-content {
+        flex-direction: column;
+      }
+      .seat-info {
+        width: auto;
+        margin-right: 0;
+        margin-bottom: 15px;
+      }
+      .details {
+        flex-direction: column;
+      }
+      .detail-box {
+        width: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Your Train Tickets</h1>
+      <p>Thank you for booking with us</p>
+    </div>
+    
+    {{#each tickets}}
+    <div class="ticket">
+      <div class="ticket-header">
+        <div>
+          <h2 style="margin: 0; color: #1e67d2;">Train Ticket</h2>
+          <div class="ticket-id">Ticket ID: {{ticketId}}</div>
+        </div>
+        <div class="qr-code">
+          <img src="{{qrCode}}" alt="Ticket QR Code">
+        </div>
+      </div>
+      
+      <div class="ticket-content">
+        <div class="seat-info">
+          <div>Seat Number</div>
+          <div class="seat-number">{{seatNumber}}</div>
+          <div>Compartment: {{compartment}}</div>
+        </div>
+        
+        <div class="details">
+          <div class="detail-box journey-details">
+            <h3>Journey</h3>
+            <p><strong>Train:</strong> {{trainName}}</p>
+            <p><strong>Travel Date:</strong> {{travelDate}}</p>
+            <p><strong>From:</strong> {{startStation}}</p>
+            <p><strong>To:</strong> {{endStation}}</p>
+          </div>
+          
+          <div class="detail-box passenger-details">
+            <h3>Passenger</h3>
+            <p><strong>Name:</strong> {{passengerName}}</p>
+            <p><strong>Booking Date:</strong> {{../bookingDate}}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="payment-info">
+        <div>Payment ID: {{paymentId}}</div>
+      </div>
+    </div>
+    {{/each}}
+    
+    <div class="footer">
+      <p>Please arrive at the station at least 30 minutes before departure.</p>
+      <p>For any inquiries, please contact our customer support.</p>
+    </div>
+  </div>
+</body>
+</html>

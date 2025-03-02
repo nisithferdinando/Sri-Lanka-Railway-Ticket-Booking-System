@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Download, Train, User, Calendar, CreditCard } from 'lucide-react';
+import { Download, Send, Train, User, Calendar, CreditCard } from 'lucide-react';
 import jsPDF from 'jspdf';
 import qrcode from 'qrcode';
 import img from "../assets/img1.png";
 import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer/Footer";
+import axiosInstance from '../Utilities/axiosInstance';
+import LoadingOverlay from '../Utilities/LoadingOverlay';
+
 
 const generateTicketId = () => {
   const timestamp = Date.now().toString(36);
@@ -20,11 +23,14 @@ const Ticket = () => {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [emailSending, setEmailSending] = useState(false);
+  const [emailSuccess, setEmailSuccess] = useState(null);
+  const [emailError, setEmailError] = useState(null);
 
   useEffect(() => {
     const initializeTickets = async () => {
       try {
-        const { bookingDetails, paymentId } = location.state || {};
+        const { bookingDetails, paymentId, email } = location.state || {};
         
         if (!bookingDetails) {
           navigate('/');
@@ -41,13 +47,15 @@ const Ticket = () => {
           travelDate: bookingDetails.selectedDate,
           startStation: bookingDetails.trainDetails.startStation,
           endStation: bookingDetails.trainDetails.endStation,
-          bookingDate: new Date().toLocaleDateString()
+          bookingDate: new Date().toLocaleDateString(),
+          email: email || passenger.email // Use passed email or passenger email
         }));
 
         setTickets(generatedTickets);
         await generateQRCodes(generatedTickets);
         setLoading(false);
       } catch (err) {
+        console.error('Error initializing tickets:', err);
         setError('Failed to initialize tickets');
         setLoading(false);
       }
@@ -158,6 +166,61 @@ const Ticket = () => {
     }
   };
 
+  const sendTicketsViaEmail = async () => {
+    try {
+      setEmailSending(true);
+      setEmailSuccess(null);
+      setEmailError(null);
+      
+      // Get email from location state
+      const { email } = location.state || {};
+      
+      if (!email) {
+        setEmailError('Email address not found');
+        setEmailSending(false);
+        return;
+      }
+      
+      // Prepare tickets for email
+      const ticketsData = tickets.map(ticket => ({
+        ticketId: ticket.ticketId,
+        paymentId: ticket.paymentId,
+        passengerName: ticket.passengerName,
+        trainName: ticket.trainName,
+        compartment: ticket.compartment,
+        seatNumber: ticket.seatNumber,
+        travelDate: ticket.travelDate,
+        startStation: ticket.startStation,
+        endStation: ticket.endStation,
+        bookingDate: ticket.bookingDate
+      }));
+      
+      // Send request to backend
+      const response = await axiosInstance.post('/api/email/send-tickets', {
+        email,
+        tickets: ticketsData
+      });
+      
+      if (response.data.success) {
+        setEmailSuccess('Tickets sent to your email successfully!');
+      } else {
+        setEmailError('Failed to send tickets. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error sending tickets via email:', error);
+      setEmailError('An error occurred while sending tickets. Please try again later.');
+    } finally {
+      setEmailSending(false);
+    }
+  };
+
+  const handleHome= async()=>{
+    setLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 400));
+    navigate('/');
+    setLoading(false);
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -185,13 +248,47 @@ const Ticket = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <Navbar />
-      <div className='flex justify-end mt-8 mr-12'>
-          <button 
-          onClick={() => navigate('/')}
-          className='px-3 py-2 bg-slate-200 rounded-lg text-slate-800 text-lg hover:bg-slate-400 transition-colors duration-200 '>Home</button>
-          </div>
-      <div className="max-w-[875px] mx-auto p-6 mt-14">
-
+      {loading && <LoadingOverlay/>}
+      <div className="flex justify-between items-center mt-8 mx-12">
+        <button 
+          onClick={sendTicketsViaEmail}
+          disabled={emailSending}
+          className={`px-4 py-2 ${emailSending ? 'bg-blue-300' : 'bg-blue-500'} text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 flex items-center gap-2`}
+        >
+          {emailSending ? (
+            <>
+              <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+              Sending...
+            </>
+          ) : (
+            <>
+              <Send size={18} /> Email Tickets
+            </>
+          )}
+        </button>
+        
+        <button 
+          onClick={handleHome}
+          className="px-3 py-2 bg-slate-800 rounded-lg text-slate-100 text-lg hover:bg-slate-400 transition-colors duration-200"
+        >
+          Home
+        </button>
+      </div>
+      
+      {/* Email status messages */}
+      {emailSuccess && (
+        <div className="mx-auto max-w-[875px] mt-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+          <p className="text-center">{emailSuccess}</p>
+        </div>
+      )}
+      
+      {emailError && (
+        <div className="mx-auto max-w-[875px] mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          <p className="text-center">{emailError}</p>
+        </div>
+      )}
+      
+      <div className="max-w-[875px] mx-auto p-6 mt-6">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-blue-600 text-center">Your Train Tickets</h1>
           <p className="text-center text-gray-600 mt-2">Your journey begins here</p>
@@ -255,7 +352,7 @@ const Ticket = () => {
                     <User size={20} className="text-blue-600" />
                     <h3 className="font-semibold text-gray-700">Passenger</h3>
                   </div>
-                  <p className="text-gray-600 font-medium"> Name: {ticket.passengerName}</p>
+                  <p className="text-gray-600 font-medium">Name: {ticket.passengerName}</p>
                   <p className="text-gray-600">Booking Date: {ticket.bookingDate}</p>
                 </div>
 
