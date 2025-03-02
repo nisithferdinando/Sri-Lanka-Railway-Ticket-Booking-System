@@ -158,7 +158,7 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
-      <Footer/>
+      <Footer showAdminPortal={true}/>
     </div>
   );
 };
