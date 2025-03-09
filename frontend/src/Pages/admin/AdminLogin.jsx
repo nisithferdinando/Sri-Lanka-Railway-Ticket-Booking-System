@@ -3,6 +3,7 @@ import axiosInstance from '../../Utilities/axiosInstance';
 import { useNavigate } from 'react-router';
 import LoadingOverlay from '../../Utilities/LoadingOverlay';
 import Navbar from '../../Components/Navbar/Navbar';
+import Footer from '../../Components/Footer/Footer';
 
 const AdminLogin = () => {
 
@@ -44,7 +45,7 @@ const AdminLogin = () => {
 
   return (
     <div>
-      <Navbar showAdminPortal={true} />
+      <Navbar showAdminPortalNavbar={true} />
        {loading && <LoadingOverlay/>}
 
       <div className="flex justify-center items-center h-[700px] bg-gray-100">
@@ -81,6 +82,7 @@ const AdminLogin = () => {
         </form>
       </div>
     </div>
+    <Footer/>
     </div>
   )
 }
