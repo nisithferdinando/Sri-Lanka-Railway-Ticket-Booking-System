@@ -1,7 +1,7 @@
 import React from 'react'
 import img from '../../assets/img1.png'
 
-const Navbar = (showAdminPortal) => {
+const Navbar = ({showAdminPortalNavbar}) => {
   return (
     <div>
         <div className='w-full'>
@@ -9,7 +9,7 @@ const Navbar = (showAdminPortal) => {
                 <img src={img} className='w-15 h-20 ml-8'/>
                 <p className='text-3xl text-white font-bold ml-24'>Sri Lanka Railway</p>
                 {
-                  showAdminPortal &&(
+                  showAdminPortalNavbar &&(
                   
                     <h2 className='text-lg text-slate-100'>Admin Portal</h2>
                     
