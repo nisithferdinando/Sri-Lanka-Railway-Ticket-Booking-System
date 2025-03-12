@@ -32,6 +32,7 @@ const Train = require('../../models/Train'); // Adjust path as needed
         routeS,
         start,
         end,
+        startS,
         operatingDays,
         departs,
         arrives,
@@ -39,7 +40,7 @@ const Train = require('../../models/Train'); // Adjust path as needed
       } = req.body;
 
       
-      if (!trainName || !trainNameS || !route || !routeS || !start || !end||
+      if (!trainName || !trainNameS || !route || !routeS || !start || !end|| !startS||
           !operatingDays || !departs || !arrives || !compartments) {
         return res.status(400).json({ message: 'All required fields must be provided' });
       }
@@ -69,6 +70,7 @@ const Train = require('../../models/Train'); // Adjust path as needed
         routeS,
         start,
         end,
+        startS,
         operatingDays,
         departs,
         arrives,
@@ -92,6 +94,7 @@ const Train = require('../../models/Train'); // Adjust path as needed
         routeS,
         start,
         end,
+        startS,
         operatingDays,
         departs,
         arrives,
@@ -123,6 +126,7 @@ const Train = require('../../models/Train'); // Adjust path as needed
           ...(routeS && { routeS }),
           ...(start && { start }),
           ...(end && { end }),
+          ...(startS && { startS }),
           ...(operatingDays && { operatingDays }),
           ...(departs && { departs }),
           ...(arrives && { arrives }),
@@ -153,7 +157,6 @@ const Train = require('../../models/Train'); // Adjust path as needed
       res.status(500).json({ error: error.message });
     }
   }
-
 
 const generateSeats = (totalSeats) => {
   const seats = [];

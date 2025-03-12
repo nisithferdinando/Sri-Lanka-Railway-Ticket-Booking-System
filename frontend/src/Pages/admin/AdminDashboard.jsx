@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Navbar from '../../Components/Navbar/Navbar';
 import Trains from './trains/Trains';
+import Users from './users/Users';
+import Bookings from './bookings/Bookings';
 
 const AdminDashboard = () => {
   const [activeItem, setActiveItem] = useState('Dashboard');
@@ -17,7 +19,9 @@ const AdminDashboard = () => {
       case 'Trains':
         return <Trains />;
       case 'Users':
-        return <Users />;
+        return <Users/>;
+      case "Bookings":
+        return <Bookings/>;
       default:
         return <p>Welcome to the Admin Dashboard</p>;
     }
@@ -26,17 +30,17 @@ const AdminDashboard = () => {
   return (
     <div>
       <Navbar showAdminPortalNavbar={true} />
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-full bg-gray-100">
      
       <div className="w-64 bg-blue-900/90 text-white">
         <div className="p-4 text-xl font-bold">Admin Panel</div>
         <div>
-          <div>
-            <div className={`px-4 py-3 hover:bg-gray-700 cursor-pointer ${activeItem === 'Dashboard' ? 'bg-gray-700' : ''}`}
+          <div className='mt-4'>
+            <div className={`px-4 py-4 hover:bg-gray-700 cursor-pointer ${activeItem === 'Dashboard' ? 'bg-gray-700' : ''}`}
                 onClick={() => handleNavigation('Dashboard')}>
               Dashboard
             </div>
-            <div className={`px-4 py-3 hover:bg-gray-700 cursor-pointer ${activeItem === 'Trains' ? 'bg-gray-700' : ''}`}
+            <div className={`px-4 py-4 hover:bg-gray-700 cursor-pointer ${activeItem === 'Trains' ? 'bg-gray-700' : ''}`}
                 onClick={() => handleNavigation('Trains')}>
               Trains
             </div>
@@ -44,11 +48,11 @@ const AdminDashboard = () => {
                 onClick={() => handleNavigation('Users')}>
               Users
             </div>
-            <div className={`px-4 py-3 hover:bg-gray-700 cursor-pointer ${activeItem === 'Bookings' ? 'bg-gray-700' : ''}`}
+            <div className={`px-4 py-4 hover:bg-gray-700 cursor-pointer ${activeItem === 'Bookings' ? 'bg-gray-700' : ''}`}
                 onClick={() => handleNavigation('Bookings')}>
               Bookings
             </div>
-            <div className="px-4 py-3 text-red-400 hover:bg-gray-700 cursor-pointer mt-auto"
+            <div className="px-4 py-4 text-red-400 hover:bg-gray-700 cursor-pointer mt-auto"
                 onClick={handleLogout}>
               Logout
             </div>
@@ -56,8 +60,8 @@ const AdminDashboard = () => {
         </div>
       </div>
   
-      <div className="flex-auto p-8">
-        <h1 className="text-2xl font-semibold mb-6">{activeItem}</h1>
+      <div className="flex-auto px-4 pt-4">
+        <h1 className="text-2xl font-semibold mb-6">{activeItem} Management</h1>
         <div>
           {renderComponent()}
         </div>
