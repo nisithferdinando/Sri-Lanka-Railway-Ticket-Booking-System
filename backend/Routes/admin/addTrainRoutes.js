@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllTrains, getTrainById, addTrain, updateTrain, deleteTrain } = require('../../Controllers/admin/addTrainController');
+const { getAllTrains, getTrainById, addTrain, updateTrain, deleteTrain, updateTrainStatus } = require('../../Controllers/admin/addTrainController');
 const router = express.Router();
 
 router.get('/trains/all', getAllTrains);

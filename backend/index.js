@@ -10,7 +10,8 @@ const paymentRoutes= require('./Routes/paymentRoutes')
 const emailRoutes=require('./Routes/emailRoutes')
 const adminAuthRoutes=require('./Routes/admin/adminAuthRoutes')
 const addTrainsRoutes=require('./Routes/admin/addTrainRoutes');
-
+const userRoutes=require('./Routes/admin/userRoutes');
+const bookingAllRoutes=require('./Routes/admin/bookingAllRoutes');
 dotenv.config();
 
 connectDB();
@@ -29,6 +30,8 @@ app.use('/api/payment', paymentRoutes);
 app.use('/api/email', emailRoutes);
 app.use('/api/adminAuth',adminAuthRoutes);
 app.use('/api/admin',addTrainsRoutes);
+app.use('/api/admin',userRoutes);
+app.use('/api/admin', bookingAllRoutes);
 
 const PORT= process.env.PORT || 8000;
 app.listen(PORT);

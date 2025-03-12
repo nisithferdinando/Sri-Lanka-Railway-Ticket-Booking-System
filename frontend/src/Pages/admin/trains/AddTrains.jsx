@@ -3,7 +3,8 @@ import { PlusCircle, Trash2 } from 'lucide-react';
 import { Station, Stationsin } from '../../../Utilities/trainData'; // Ensure you have this import
 import axiosInstance from '../../../Utilities/axiosInstance';
 
-const AddTrains = () => {
+
+const AddTrains = ({onSuccess}) => {
  
   const [trainName, setTrainName] = useState('');
   const [trainNameSinhala, setTrainNameSinhala] = useState('');
@@ -12,13 +13,13 @@ const AddTrains = () => {
   const [arrivalTime, setArrivalTime] = useState('');
   const [startStation, setStartStation] = useState('');
   const [endStation, setEndStation] = useState('');
+  const [startStationS, setStartStationS]=useState('');
   const [routes, setRoutes] = useState([]);
   const [currentRoute, setCurrentRoute] = useState({
     english: '',
     sinhala: ''
   });
 
- 
   const [compartments, setCompartments] = useState([]);
   const [currentCompartment, setCurrentCompartment] = useState({
     name: '',
@@ -99,6 +100,7 @@ const AddTrains = () => {
       routeS: routes.map(r => r.sinhala),
       start: startStation,
       end: endStation,
+      startS:startStationS,
       operatingDays,
       departs: departureTime,
       arrives: arrivalTime,
@@ -107,20 +109,43 @@ const AddTrains = () => {
     
     const response=await axiosInstance.post('/api/admin/trains/new', trainData);
 
-    alert("Trains added successfully");
+    resetForm();
+    if (onSuccess) {
+      onSuccess();
+    }
+    
   }
   catch(error){
     console.log("Error adding train", error);
     const errorMessage=error.response?.data?.message || error.message || "Failed to add train";
-    alert(errorMessage);
-
+    
    }
+  };
+
+  const resetForm = () => {
+    setTrainName('');
+    setTrainNameSinhala('');
+    setOperatingDays([]);
+    setDepartureTime('');
+    setArrivalTime('');
+    setStartStation('');
+    setEndStation('');
+    setRoutes([]);
+    setCurrentRoute({ english: '', sinhala: '' });
+    setCompartments([]);
+    setCurrentCompartment({
+      name: '',
+      totalSeats: '',
+      price: '',
+      arrivalTime: ''
+    });
   };
 
   return (
     <div>
+       
       <div className="mx-auto bg-white p-6 rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Add New Train</h1>
+        <h1 className="text-xl font-bold mb-6 text-center text-gray-500">Add New Train</h1>
 
         <div className="grid md:grid-cols-2 gap-4 mb-6">
           <div>
@@ -163,6 +188,19 @@ const AddTrains = () => {
             >
               <option value="">Select End Station</option>
               {Station.map((station, index) => (
+                <option key={index} value={station}>{station}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Start Station (Sinhala)</label>
+            <select
+              value={startStationS}
+              onChange={(e) => setStartStationS(e.target.value)}
+              className="w-full border border-gray-300 p-2 rounded focus:ring-2 focus:ring-blue-200"
+            >
+              <option value="">Select start Station (Sinhala)</option>
+              {Stationsin.map((station, index) => (
                 <option key={index} value={station}>{station}</option>
               ))}
             </select>
