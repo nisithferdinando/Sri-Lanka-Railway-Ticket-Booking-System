@@ -13,3 +13,13 @@ exports.getAllBookings = async(req, res) => {
         res.status(500).json({error: true, message: "Server error. Please try again later"});
     }
 };
+
+exports.getAllBookingCount=async(req, res)=>{
+    try{
+        const count=await Booking.countDocuments({});
+        res.status(200).json(count);
+    }
+    catch(error){
+        res.status(500).json({error:true, message:"error in fetching booking counr"});
+    }
+};

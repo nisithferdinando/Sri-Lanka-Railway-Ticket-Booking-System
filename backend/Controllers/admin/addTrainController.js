@@ -180,3 +180,14 @@ const generateSeats = (totalSeats) => {
   
   return seats;
 };
+
+exports.getTotalTrainCount = async(req, res) => {
+  try {
+    const count = await Train.countDocuments({});
+    res.status(200).json(count);
+  }
+  catch(error) {
+    console.log("error fetching", error);
+    res.status(500).json({error: true, message: "error in fetching total count"});
+  }
+};

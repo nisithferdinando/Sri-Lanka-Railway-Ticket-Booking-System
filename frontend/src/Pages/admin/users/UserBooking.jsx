@@ -24,7 +24,10 @@ const UserBooking = ({ userId, userName }) => {
       setLoading(true);
       setError(null);
       const response = await axiosInstance.get(`/api/admin/users/booking/${userId}`);
-      setBookings(response.data);
+      const sortedBookings = response.data.sort(
+        (a, b) => new Date(b.selectedDate) - new Date(a.selectedDate)
+      );
+      setBookings(sortedBookings);
     } catch (error) {
       console.error('Error fetching bookings:', error);
       setError(error.response?.data?.message || 'Failed to fetch bookings');

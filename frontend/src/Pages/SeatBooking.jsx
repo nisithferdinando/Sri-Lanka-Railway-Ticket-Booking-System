@@ -133,11 +133,9 @@ const SeatBooking = () => {
 
   };
   
-
   const isSeatBooked = (expTimes) => {
     if (!Array.isArray(expTimes) || expTimes.length === 0) return false; 
 
-    
     return expTimes.some(exp => {
         if (!exp) return false; 
         const expirationTime = new Date(exp).toISOString().split('T')[0];
@@ -167,11 +165,11 @@ const SeatBooking = () => {
           Train Name: {train?.trainName || "Loading..."}
         </h1>
         <h2 className='text-lg text-center font-sans text-blue-700 mt-4'>Date: {selectedDate}</h2>
-        <div className="text-xl font-semibold flex gap-x-8 justify-center mt-8 px-2 py-2 bg-slate-300 w-[400px] mx-auto rounded-lg">
+        <div className="text-xl font-semibold flex gap-x-8 justify-center mt-8 px-2 py-2 bg-slate-300 w-[500px] mx-auto rounded-lg">
           <h2 className="text-slate-700 ">Start: {train?.startStation}</h2>
           <h2 className="text-slate-700">End: {train?.endStation}</h2>
         </div>
-        <div className='text-lg font-normal flex gap-x-8 justify-center mt-2 bg-blue-300 w-[400px] mx-auto rounded-lg px-2 py-2'>
+        <div className='text-lg font-normal flex gap-x-8 justify-center mt-2 bg-blue-300 w-[500px] mx-auto rounded-lg px-2 py-2'>
           <h2 className='text-slate-900'>Departs: {train?.departs}</h2>
           <h2 className='text-slate-900'>Arrives: {train?.arrives}</h2>
         </div>

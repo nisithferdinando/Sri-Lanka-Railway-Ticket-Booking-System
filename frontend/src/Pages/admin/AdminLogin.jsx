@@ -43,13 +43,25 @@ const AdminLogin = () => {
 
  };
 
+ const handleHome= async()=>{
+  setLoading(true);
+  await new Promise(resolve => setTimeout(resolve, 400));
+  navigate('/landing');
+  setLoading(false);
+};
+
+
   return (
-    <div>
+    <div className='bg-gray-100'>
       <Navbar showAdminPortalNavbar={true} />
        {loading && <LoadingOverlay/>}
-
-      <div className="flex justify-center items-center h-[700px] bg-gray-100">
-      <div className="bg-white p-8 shadow-md rounded-lg w-96">
+       <div className='flex justify-end'>
+          <button className='bg-slate-800 px-4 py-2 text-base text-slate-100 mt-8 mr-8 rounded-lg'
+          onClick={handleHome}
+          >Home</button>
+        </div>
+      <div className="flex justify-center items-center h-[700px]">
+      <div className="bg-white p-12 shadow-md rounded-lg w-96">
         <div className="text-2xl font-bold text-center mt-4 mb-8">Admin Portal</div>
         <form onSubmit={handleAdminLogin}>
           <div className="mb-4">

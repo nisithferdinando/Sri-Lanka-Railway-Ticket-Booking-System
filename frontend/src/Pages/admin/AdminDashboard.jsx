@@ -3,15 +3,26 @@ import Navbar from '../../Components/Navbar/Navbar';
 import Trains from './trains/Trains';
 import Users from './users/Users';
 import Bookings from './bookings/Bookings';
+import { useNavigate } from 'react-router';
+import Dashboard from './dashboard/Dashboard';
+import LoadingOverlay from '../../Utilities/LoadingOverlay';
 
 const AdminDashboard = () => {
+
   const [activeItem, setActiveItem] = useState('Dashboard');
+  const [loading, setLoading] =useState(false);
+  const navigate =useNavigate();
+
   const handleNavigation = (item) => {
     setActiveItem(item);
   };
-  const handleLogout = () => {
-   localStorage.removeItem('token');
-   window.location.reload();
+  const handleLogout =async () => {
+
+   setLoading(true);
+   localStorage.removeItem('adminToken');
+   await new Promise(resolve => setTimeout(resolve, 1000));
+   navigate('/adminPortalLogin');
+   setLoading(false);
    
   };
   const renderComponent = () => {
@@ -22,6 +33,8 @@ const AdminDashboard = () => {
         return <Users/>;
       case "Bookings":
         return <Bookings/>;
+      case "Dashboard":
+        return <Dashboard/>;
       default:
         return <p>Welcome to the Admin Dashboard</p>;
     }
@@ -29,6 +42,7 @@ const AdminDashboard = () => {
  
   return (
     <div>
+      {loading && <LoadingOverlay/>}
       <Navbar showAdminPortalNavbar={true} />
     <div className="flex h-full bg-gray-100">
      
@@ -61,7 +75,7 @@ const AdminDashboard = () => {
       </div>
   
       <div className="flex-auto px-4 pt-4">
-        <h1 className="text-2xl font-semibold mb-6">{activeItem} Management</h1>
+       
         <div>
           {renderComponent()}
         </div>
