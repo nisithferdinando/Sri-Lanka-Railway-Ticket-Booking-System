@@ -19,7 +19,7 @@ const handleAdminNavigate= async()=>{
     <div>
       {loading && <LoadingOverlay/>}
         <div className='w-full'>
-            <div className='bg-Secondary w-full p-7'>
+            <div className='bg-blue-950 w-full p-7'>
                 <p className='text-white italic text-sm text-center'>@Copyright All Right Reserved</p>
                 {
                   showAdminPortal &&(

@@ -58,11 +58,23 @@ const Login = () => {
     navigate('/signup');
   };
 
+  const handleHome= async()=>{
+    setLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 400));
+    navigate('/landing');
+    setLoading(false);
+  };
+  
+
   return (
     <div className='flex flex-col min-h-screen'>
       <Navbar/>
       {loading && <LoadingOverlay/>}
-     
+      <div className='flex justify-end'>
+          <button className='bg-slate-800 px-4 py-2 text-base text-slate-100 mt-8 mr-8 rounded-lg'
+          onClick={handleHome}
+          >Home</button>
+        </div>
       <div className='flex justify-center items-center flex-grow'>
         <div className='bg-white border-[1.5px] drop-shadow-md rounded-lg px-16 py-16 my-12 outline-none'>
           <form onSubmit={handleLogin}>

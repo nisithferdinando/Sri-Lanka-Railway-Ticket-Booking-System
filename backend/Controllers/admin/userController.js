@@ -12,5 +12,16 @@ exports.getUsers=async(req, res)=>{
       }
   };
 
+  exports.getAllUserCount=async(req, res)=>{
+    try{
+      const count= await User.countDocuments();
+      res.status(200).json(count);
+
+    }
+    catch(error){
+      res.status(500).json({error: true, message:"error in fetching user count"});
+    }
+  }
+
 
 
