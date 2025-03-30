@@ -1,27 +1,30 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Home from '../Pages/Home';
-import HomeS from '../Pages/sinhala/HomeS';
-import Login from '../Pages/Login';
-import SignUp from '../Pages/SignUp';
-import SeatBooking from '../Pages/SeatBooking';
-import SeatBookingS from '../Pages/sinhala/SeatBookingS';
-import PassengerForm from '../Pages/PassengerForm';
-import ReviewBooking from '../Pages/ReviewBooking';
-import BookingPayment from '../Pages/BookingPayment';
-import PassengerFormS from '../Pages/sinhala/PassengerFormS';
-import ReviewBookingS from '../Pages/sinhala/ReviewBookingS';
-import BookingPaymentS from '../Pages/sinhala/BookingPaymentS';
-import Account from '../Pages/Account';
-import Ticket from '../Pages/Ticket';
-import LandingPage from '../Pages/LandingPage';
-import AdminLogin from '../Pages/admin/adminLogin';
-import AdminDashboard from '../Pages/admin/adminDashboard';
-
-
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Home from "../Pages/Home";
+import HomeS from "../Pages/sinhala/HomeS";
+import Login from "../Pages/Login";
+import SignUp from "../Pages/SignUp";
+import SeatBooking from "../Pages/SeatBooking";
+import SeatBookingS from "../Pages/sinhala/SeatBookingS";
+import PassengerForm from "../Pages/PassengerForm";
+import ReviewBooking from "../Pages/ReviewBooking";
+import BookingPayment from "../Pages/BookingPayment";
+import PassengerFormS from "../Pages/sinhala/PassengerFormS";
+import ReviewBookingS from "../Pages/sinhala/ReviewBookingS";
+import BookingPaymentS from "../Pages/sinhala/BookingPaymentS";
+import Account from "../Pages/Account";
+import Ticket from "../Pages/Ticket";
+import LandingPage from "../Pages/LandingPage";
+import AdminLogin from "../Pages/admin/adminLogin";
+import AdminDashboard from "../Pages/admin/AdminDashboard";
 
 const isAuthenticated = () => {
-  return !!localStorage.getItem('token');
+  return !!localStorage.getItem("token");
 };
 
 const ProtectedRoute = ({ element }) => {
@@ -34,22 +37,20 @@ const Routers = () => {
       <Router>
         <Routes>
           {/* Public Routes */}
-          
+
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path='/landing' element={<LandingPage/>}/>
-          <Route path='/adminPortalLogin' element={<AdminLogin/>}/>
-          <Route path='/adminDashboard' element={<AdminDashboard/>}/>
-          
+          <Route path="/landing" element={<LandingPage />} />
+          <Route path="/adminPortalLogin" element={<AdminLogin />} />
+          <Route path="/adminDashboard" element={<AdminDashboard />} />
 
           {/* Protected Routes */}
-          <Route
-          path='/'
-          element={<ProtectedRoute element={<Home/>}/>}/>
+          <Route path="/" element={<ProtectedRoute element={<Home />} />} />
 
           <Route
-          path='/home-sin'
-          element={<ProtectedRoute element={<HomeS/>}/>}/>
+            path="/home-sin"
+            element={<ProtectedRoute element={<HomeS />} />}
+          />
 
           <Route
             path="/seat-booking/:trainId"
@@ -88,8 +89,9 @@ const Routers = () => {
             element={<ProtectedRoute element={<Account />} />}
           />
           <Route
-          path="/tickets"
-          element={<ProtectedRoute element={<Ticket/>}/>}/>
+            path="/tickets"
+            element={<ProtectedRoute element={<Ticket />} />}
+          />
         </Routes>
       </Router>
     </div>
