@@ -132,7 +132,7 @@ const Bookings = () => {
           sx={{
             flexGrow: 1,
             overflow: 'auto',
-            maxHeight: 'calc(100vh - 200px)', // Adjusted for filter space
+            maxHeight: 'calc(100vh - 200px)', 
             '&::-webkit-scrollbar': {
               width: '10px',
               height: '10px',

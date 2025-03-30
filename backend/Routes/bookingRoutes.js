@@ -1,11 +1,12 @@
-
 const express = require('express');
 const router = express.Router();
-const bookingController = require('../Controllers/bookingController');
-const authenticateToken = require('../Utilities/utiliies');
 
-router.post('/saveBooking', bookingController.saveBookingDetails);
-router.get('/history', authenticateToken, bookingController.getBookingHistory);
-router.post('/:bookingId/cancel', authenticateToken, bookingController.cancelBooking);
+const authenticateToken = require('../Utilities/utiliies');
+const { saveBookingDetails, getBookingHistory, cancelBooking, applyForRefund, processRefund } = require('../Controllers/bookingController');
+
+router.post('/saveBooking', saveBookingDetails);
+router.get('/history', authenticateToken, getBookingHistory);
+router.post('/:bookingId/cancel', authenticateToken, cancelBooking);
+router.post('/:bookingId/apply-refund', authenticateToken, applyForRefund);
 
 module.exports = router;
