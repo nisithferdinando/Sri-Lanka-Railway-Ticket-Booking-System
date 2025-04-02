@@ -31,6 +31,14 @@ const ProtectedRoute = ({ element }) => {
   return isAuthenticated() ? element : <Navigate to="/landing" />;
 };
 
+const IsAdminAuthenticated = () => {
+  return !!localStorage.getItem("adminToken");
+};
+
+const AdminProtectedRoutes = ({ element }) => {
+  return IsAdminAuthenticated() ? element : <Navigate to="/adminPortalLogin" />;
+};
+
 const Routers = () => {
   return (
     <div>
@@ -41,8 +49,13 @@ const Routers = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/landing" element={<LandingPage />} />
+
           <Route path="/adminPortalLogin" element={<AdminLogin />} />
-          <Route path="/adminDashboard" element={<AdminDashboard />} />
+
+          <Route
+            path="/adminDashboard"
+            element={<AdminProtectedRoutes element={<AdminDashboard />} />}
+          />
 
           {/* Protected Routes */}
           <Route path="/" element={<ProtectedRoute element={<Home />} />} />
