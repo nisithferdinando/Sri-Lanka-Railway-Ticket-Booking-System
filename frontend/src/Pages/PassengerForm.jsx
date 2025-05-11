@@ -166,11 +166,11 @@ const PassengerForm = () => {
   }, []);
 
   return (
-    <div>
+    <div >
       <Navbar />
       {loading && <LoadingOverlay/>}
 
-      <div className="max-w-4xl mx-auto p-6 mt-14 flex-gorw">
+      <div className="max-w-4xl mx-auto p-6 mt-14 flex-gorw min-h-screen">
         <h1 className="text-3xl font-bold text-center mb-6 text-slate-700">Passenger Details</h1>
         <div className="mb-4 flex flex-col justify-center items-center bg-slate-200 rounded-lg p-4 text-slate-800">
           <div className="font-semibold flex justify-center">

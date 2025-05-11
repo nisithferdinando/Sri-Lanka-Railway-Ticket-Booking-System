@@ -62,6 +62,7 @@ const SignUp = () => {
         }
        );
        localStorage.setItem("userName", `${response.data.firstName}`);
+       localStorage.setItem("userId", response.data.userId);
        localStorage.setItem("token", response.data.token);
        await new Promise(resolve => setTimeout(resolve, 400));
       setLoading(false);

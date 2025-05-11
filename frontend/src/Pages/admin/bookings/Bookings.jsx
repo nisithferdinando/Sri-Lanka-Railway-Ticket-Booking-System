@@ -152,6 +152,7 @@ const Bookings = () => {
                 <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>Booking Id</TableCell>
                 <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>Train Name</TableCell>
                 <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>Compartment</TableCell>
+                <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>Seat Number</TableCell>
                 <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>Travel Date</TableCell>
                 <TableCell sx={{ backgroundColor: '#f5f5f5', fontWeight: 'bold'}}>Booking Status</TableCell>
               </TableRow>
@@ -197,6 +198,11 @@ const Bookings = () => {
                     <TableCell>
                       <Typography variant="body2">
                         {booking.compartment}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">
+                        {booking.seatNumbers}
                       </Typography>
                     </TableCell>
                     <TableCell>

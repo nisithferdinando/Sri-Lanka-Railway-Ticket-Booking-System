@@ -35,12 +35,12 @@ const UserBooking = ({ userId, userName }) => {
       setLoading(false);
     }
   };
-
+0
   const formatSeatNumbers=(seatNumbers)=>{
-    if(!seatNumbers && seatNumbers.length===0){
+    if(!seatNumbers){
         return "None";
     }
-        return seatNumbers.join(", ");
+        return seatNumbers;
 
   }
 
@@ -96,7 +96,7 @@ const UserBooking = ({ userId, userName }) => {
                 <TableBody>
                   {bookings.map((booking) => (
                     <TableRow key={booking._id}>
-                      <TableCell>{booking._id}</TableCell>
+                      <TableCell>{booking.bookingId}</TableCell>
                       <TableCell>{booking.trainName}</TableCell>
                       <TableCell>{new Date(booking.selectedDate).toLocaleDateString()}</TableCell>
                       <TableCell>{new Date(booking.bookingDate).toLocaleDateString()}</TableCell>

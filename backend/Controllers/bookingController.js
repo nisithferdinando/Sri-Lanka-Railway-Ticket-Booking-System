@@ -13,6 +13,8 @@ exports.saveBookingDetails = async (req, res) => {
     selectedDate,
     status,
     email,
+    ticketId,
+    bookingApproval,
   } = req.body;
 
   try {
@@ -25,6 +27,8 @@ exports.saveBookingDetails = async (req, res) => {
       selectedDate,
       status,
       email,
+      ticketId,
+      bookingApproval,
     });
 
     await newBooking.save();
@@ -101,21 +105,36 @@ exports.applyForRefund = async (req, res) => {
 exports.getBookingHistory = async (req, res) => {
   try {
     const userId = req.user.id;
-    const currentDate = new Date();
 
     let bookings = await Booking.find({ userId }).sort({ bookingDate: -1 });
+    const currentDate = new Date();
 
-    const updatedBookings = bookings.map((booking) => ({
-      bookingId: booking.bookingId,
-      bookingDate: booking.bookingDate.toISOString().split("T")[0],
-      trainName: booking.trainName,
-      compartment: booking.compartment,
-      seatNumbers: booking.seatNumbers.join(", "),
-      travelDate: booking.selectedDate.toISOString().split("T")[0],
-      status: booking.status,
-      refundStatus: booking.refundStatus,
-      refundAccept: booking.refundAccept,
-    }));
+    const updatedBookings = await Promise.all(
+      bookings.map(async (booking) => {
+        const bookingDoc = booking.toObject();
+
+        // Check if the travel date has passed and booking is still active
+        if (
+          new Date(booking.selectedDate) < currentDate &&
+          booking.status === "active"
+        ) {
+          // Update the booking status in the database
+          await Booking.findByIdAndUpdate(booking._id, { status: "expired" });
+          bookingDoc.status = "expired";
+        }
+
+        return {
+          bookingId: bookingDoc.bookingId,
+          bookingDate: bookingDoc.bookingDate.toISOString().split("T")[0],
+          trainName: bookingDoc.trainName,
+          compartment: bookingDoc.compartment,
+          seatNumbers: bookingDoc.seatNumbers,
+          travelDate: bookingDoc.selectedDate.toISOString().split("T")[0],
+          status: bookingDoc.status,
+          refundStatus:bookingDoc.refundStatus,
+        };
+      })
+    );
 
     res.status(200).json({
       success: true,

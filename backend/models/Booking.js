@@ -6,7 +6,8 @@ const bookingSchema = new mongoose.Schema({
   email: String,
   trainName: String,
   compartment: String,
-  seatNumbers: [String],
+  seatNumbers: String,
+  ticketId: String,
   selectedDate: Date,
   bookingDate: { type: Date, default: Date.now },
   status: {
@@ -22,6 +23,11 @@ const bookingSchema = new mongoose.Schema({
   refundAccept: {
     type: String,
     enum: ["pending", "accepted", "rejected"],
+    default: "pending",
+  },
+  bookingApproval: {
+    type: String,
+    enum: ["approved", "rejected", "pending"],
     default: "pending",
   },
 });
