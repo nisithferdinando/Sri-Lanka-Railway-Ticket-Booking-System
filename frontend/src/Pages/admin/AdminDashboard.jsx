@@ -7,6 +7,7 @@ import { useNavigate } from "react-router";
 import Dashboard from "./dashboard/Dashboard";
 import LoadingOverlay from "../../Utilities/LoadingOverlay";
 import Refund from "./refund/Refund";
+import TicketChecking from "./tickets/TicketChecking";
 
 const AdminDashboard = () => {
   const [activeItem, setActiveItem] = useState("Dashboard");
@@ -35,6 +36,8 @@ const AdminDashboard = () => {
         return <Dashboard />;
       case "Refund":
         return <Refund />;
+      case "Tickets":
+        return <TicketChecking />;
       default:
         return <p>Welcome to the Admin Dashboard</p>;
     }
@@ -68,7 +71,7 @@ const AdminDashboard = () => {
               <div
                 className={`px-4 py-3 hover:bg-gray-700 cursor-pointer ${
                   activeItem === "Users" ? "bg-gray-700" : ""
-                }`}
+                }`} 
                 onClick={() => handleNavigation("Users")}
               >
                 Users
@@ -89,6 +92,14 @@ const AdminDashboard = () => {
               >
                 Refunds
               </div>
+            {/* <div
+              className={`px-4 py-4 hover:bg-gray-700 cursor-pointer ${
+                activeItem === "Tickets" ? "bg-gray-700" : ""
+              }`}
+              onClick={() => handleNavigation("Tickets")}
+            >
+              Tickets
+            </div> */}
               <div
                 className="px-4 py-4 text-red-400 hover:bg-gray-700 cursor-pointer mt-auto"
                 onClick={handleLogout}

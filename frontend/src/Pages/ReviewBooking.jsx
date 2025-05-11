@@ -102,10 +102,10 @@ const ReviewBooking = () => {
   };
 
   return (
-    <div>
+    <div className=''>
       <Navbar />
       {loading && <LoadingOverlay/>}
-      <div className="max-w-4xl mx-auto p-6 mt-14">
+      <div className="max-w-4xl mx-auto p-6 mt-14 flex flex-col flex-grow min-h-screen">
         <h1 className="text-3xl font-bold text-center mb-6 text-slate-700">Review Booking Details</h1>
 
         {/* Train Details */}

@@ -237,7 +237,7 @@ const SeatBooking = () => {
                     ))}
                 </div>
                 
-                <div className="flex justify-between gap-4 mt-10">
+                <div className="flex justify-between gap-4 mt-10 pb-36 ">
                   <button
                     className="bg-gray-600 text-white px-5 py-2 rounded hover:bg-gray-700 transition-colors"
                     onClick={handleSearchAgain}

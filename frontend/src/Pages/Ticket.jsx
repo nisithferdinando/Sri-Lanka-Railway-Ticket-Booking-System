@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Download, Send, Train, User, Calendar, CreditCard } from 'lucide-react';
-import jsPDF from 'jspdf';
-import qrcode from 'qrcode';
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+  Download,
+  Send,
+  Train,
+  User,
+  Calendar,
+  CreditCard,
+} from "lucide-react";
+import jsPDF from "jspdf";
+import qrcode from "qrcode";
 import img from "../assets/img1.png";
 import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer/Footer";
-import axiosInstance from '../Utilities/axiosInstance';
-import LoadingOverlay from '../Utilities/LoadingOverlay';
-
-
-const generateTicketId = () => {
-  const timestamp = Date.now().toString(36);
-  const randomStr = Math.random().toString(36).substring(2, 8);
-  return `TKT-${timestamp.toUpperCase()}-${randomStr.toUpperCase()}`;
-};
+import axiosInstance from "../Utilities/axiosInstance";
+import LoadingOverlay from "../Utilities/LoadingOverlay";
 
 const Ticket = () => {
   const location = useLocation();
@@ -30,26 +30,33 @@ const Ticket = () => {
   useEffect(() => {
     const initializeTickets = async () => {
       try {
-        const { bookingDetails, paymentId, email } = location.state || {};
-        
+        const { bookingDetails, paymentId, email, ticketIds } =
+          location.state || {};
+
         if (!bookingDetails) {
-          navigate('/');
+          navigate("/");
           return;
         }
 
-        const generatedTickets = bookingDetails.passengers.map((passenger, index) => ({
-          ticketId: generateTicketId(),
-          paymentId,
-          passengerName: passenger.name,
-          trainName: bookingDetails.trainDetails.trainName,
-          compartment: bookingDetails.compartment,
-          seatNumber: bookingDetails.selectedSeats[index],
-          travelDate: bookingDetails.selectedDate,
-          startStation: bookingDetails.trainDetails.startStation,
-          endStation: bookingDetails.trainDetails.endStation,
-          bookingDate: new Date().toLocaleDateString(),
-          email: email || passenger.email // Use passed email or passenger email
-        }));
+        const generatedTickets = bookingDetails.passengers.map((passenger, index) => {
+          // Use provided ticket ID for this seat, or generate a new one if needed
+          const ticketId = ticketIds[index] || 
+            `TKT-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+          
+          return {
+            ticketId,
+            paymentId,
+            passengerName: passenger.name,
+            trainName: bookingDetails.trainDetails.trainName,
+            compartment: bookingDetails.compartment,
+            seatNumber: bookingDetails.selectedSeats[index],
+            travelDate: bookingDetails.selectedDate,
+            startStation: bookingDetails.trainDetails.startStation,
+            endStation: bookingDetails.trainDetails.endStation,
+            bookingDate: new Date().toLocaleDateString(),
+            email: passenger.email || email, // Use passenger email or default email
+          };
+        });
 
         setTickets(generatedTickets);
         await generateQRCodes(generatedTickets);
@@ -74,42 +81,48 @@ const Ticket = () => {
           trainName: ticket.trainName,
           seatNumber: ticket.seatNumber,
           compartment: ticket.compartment,
-          travelDate: ticket.travelDate
+          travelDate: ticket.travelDate,
         });
 
         codes[ticket.ticketId] = await qrcode.toDataURL(qrData, {
           width: 128,
           margin: 2,
-          errorCorrectionLevel: 'H'
+          errorCorrectionLevel: "H",
         });
       }
       setQrCodes(codes);
     } catch (error) {
-      console.error('Error generating QR codes:', error);
-      setError('Failed to generate QR codes');
+      console.error("Error generating QR codes:", error);
+      setError("Failed to generate QR codes");
     }
   };
 
   const downloadSingleTicket = async (ticket) => {
     try {
       const doc = new jsPDF({
-        orientation: 'landscape',
-        unit: 'mm',
-        format: 'a5'
+        orientation: "landscape",
+        unit: "mm",
+        format: "a5",
       });
 
       // White background
       doc.setFillColor(255, 255, 255);
-      doc.rect(0, 0, doc.internal.pageSize.width, doc.internal.pageSize.height, 'F');
+      doc.rect(
+        0,
+        0,
+        doc.internal.pageSize.width,
+        doc.internal.pageSize.height,
+        "F"
+      );
 
       // logo
-      doc.addImage(img, 'PNG', 15, 15, 20, 20);
+      doc.addImage(img, "PNG", 15, 15, 20, 20);
 
       // Title
-      doc.setFont('helvetica', 'bold');
+      doc.setFont("helvetica", "bold");
       doc.setFontSize(24);
       doc.setTextColor(25, 103, 210);
-      doc.text('Train Ticket', 40, 28);
+      doc.text("Train Ticket", 40, 28);
 
       // Ticket ID
       doc.setFontSize(12);
@@ -119,40 +132,42 @@ const Ticket = () => {
       // QR Code
       const qrCode = qrCodes[ticket.ticketId];
       if (qrCode) {
-        doc.addImage(qrCode, 'PNG', 180, 15, 25, 25);
+        doc.addImage(qrCode, "PNG", 180, 15, 25, 25);
       }
 
-      // Seat Number 
+      // Seat Number
       doc.setFillColor(59, 130, 246);
-      doc.roundedRect(15, 45, 60, 50, 3, 3, 'F');
+      doc.roundedRect(15, 45, 60, 50, 3, 3, "F");
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(14);
-      doc.text('Seat Number', 45, 60, { align: 'center' });
+      doc.text("Seat Number", 45, 60, { align: "center" });
       doc.setFontSize(24);
-      doc.text(ticket.seatNumber, 45, 75, { align: 'center' });
+      doc.text(ticket.seatNumber, 45, 75, { align: "center" });
       doc.setFontSize(12);
-      doc.text(`Compartment: ${ticket.compartment}`, 45, 85, { align: 'center' });
+      doc.text(`Compartment: ${ticket.compartment}`, 45, 85, {
+        align: "center",
+      });
 
       // Passenger Details
       doc.setFillColor(241, 245, 249);
-      doc.roundedRect(85, 45, 55, 50, 3, 3, 'F');
+      doc.roundedRect(85, 45, 55, 50, 3, 3, "F");
       doc.setTextColor(71, 85, 105);
       doc.setFontSize(14);
-      doc.text('Passenger', 112.5, 55, { align: 'center' });
+      doc.text("Passenger", 112.5, 55, { align: "center" });
       doc.setFontSize(12);
-      doc.text(ticket.passengerName, 112.5, 65, { align: 'center' });
-      doc.text(`Booking Date:`, 112.5, 75, { align: 'center' });
-      doc.text(ticket.bookingDate, 112.5, 82, { align: 'center' });
+      doc.text(ticket.passengerName, 112.5, 65, { align: "center" });
+      doc.text(`Booking Date:`, 112.5, 75, { align: "center" });
+      doc.text(ticket.bookingDate, 112.5, 82, { align: "center" });
 
       // Journey Details
       doc.setFillColor(240, 253, 244);
-      doc.roundedRect(150, 45, 55, 50, 3, 3, 'F');
+      doc.roundedRect(150, 45, 55, 50, 3, 3, "F");
       doc.setTextColor(71, 85, 105);
       doc.setFontSize(14);
-      doc.text('Journey', 177.5, 55, { align: 'center' });
+      doc.text("Journey", 177.5, 55, { align: "center" });
       doc.setFontSize(12);
-      doc.text(ticket.trainName, 177.5, 65, { align: 'center' });
-      doc.text(ticket.travelDate, 177.5, 75, { align: 'center' });
+      doc.text(ticket.trainName, 177.5, 65, { align: "center" });
+      doc.text(ticket.travelDate, 177.5, 75, { align: "center" });
 
       // Payment ID
       doc.setTextColor(100, 116, 139);
@@ -161,8 +176,8 @@ const Ticket = () => {
 
       doc.save(`Train_Ticket_${ticket.ticketId}.pdf`);
     } catch (error) {
-      console.error('Error generating PDF:', error);
-      setError('Failed to generate PDF ticket');
+      console.error("Error generating PDF:", error);
+      setError("Failed to generate PDF ticket");
     }
   };
 
@@ -171,18 +186,18 @@ const Ticket = () => {
       setEmailSending(true);
       setEmailSuccess(null);
       setEmailError(null);
-      
+
       // Get email from location state
       const { email } = location.state || {};
-      
+
       if (!email) {
-        setEmailError('Email address not found');
+        setEmailError("Email address not found");
         setEmailSending(false);
         return;
       }
-      
+
       // Prepare tickets for email
-      const ticketsData = tickets.map(ticket => ({
+      const ticketsData = tickets.map((ticket) => ({
         ticketId: ticket.ticketId,
         paymentId: ticket.paymentId,
         passengerName: ticket.passengerName,
@@ -192,34 +207,36 @@ const Ticket = () => {
         travelDate: ticket.travelDate,
         startStation: ticket.startStation,
         endStation: ticket.endStation,
-        bookingDate: ticket.bookingDate
+        bookingDate: ticket.bookingDate,
       }));
-      
+
       // Send request to backend
-      const response = await axiosInstance.post('/api/email/send-tickets', {
+      const response = await axiosInstance.post("/api/email/send-tickets", {
         email,
-        tickets: ticketsData
+        tickets: ticketsData,
       });
-      
+
       if (response.data.success) {
-        setEmailSuccess('Tickets sent to your email successfully!');
+        setEmailSuccess("Tickets sent to your email successfully!");
       } else {
-        setEmailError('Failed to send tickets. Please try again.');
+        setEmailError("Failed to send tickets. Please try again.");
       }
     } catch (error) {
-      console.error('Error sending tickets via email:', error);
-      setEmailError('An error occurred while sending tickets. Please try again later.');
+      console.error("Error sending tickets via email:", error);
+      setEmailError(
+        "An error occurred while sending tickets. Please try again later."
+      );
     } finally {
       setEmailSending(false);
     }
   };
 
-  const handleHome= async()=>{
+  const handleHome = async () => {
     setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 400));
-    navigate('/');
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    navigate("/");
     setLoading(false);
-  }
+  };
 
   if (loading) {
     return (
@@ -234,8 +251,8 @@ const Ticket = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="bg-red-50 p-4 rounded-lg">
           <p className="text-red-600">{error}</p>
-          <button 
-            onClick={() => navigate('/')}
+          <button
+            onClick={() => navigate("/")}
             className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
           >
             Return Home
@@ -248,12 +265,14 @@ const Ticket = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <Navbar />
-      {loading && <LoadingOverlay/>}
+      {loading && <LoadingOverlay />}
       <div className="flex justify-between items-center mt-8 mx-12">
-        <button 
+        <button
           onClick={sendTicketsViaEmail}
           disabled={emailSending}
-          className={`px-4 py-2 ${emailSending ? 'bg-blue-300' : 'bg-blue-500'} text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 flex items-center gap-2`}
+          className={`px-4 py-2 ${
+            emailSending ? "bg-blue-300" : "bg-blue-500"
+          } text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 flex items-center gap-2`}
         >
           {emailSending ? (
             <>
@@ -266,36 +285,40 @@ const Ticket = () => {
             </>
           )}
         </button>
-        
-        <button 
+
+        <button
           onClick={handleHome}
           className="px-3 py-2 bg-slate-800 rounded-lg text-slate-100 text-lg hover:bg-slate-400 transition-colors duration-200"
         >
           Home
         </button>
       </div>
-      
+
       {/* Email status messages */}
       {emailSuccess && (
         <div className="mx-auto max-w-[875px] mt-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
           <p className="text-center">{emailSuccess}</p>
         </div>
       )}
-      
+
       {emailError && (
         <div className="mx-auto max-w-[875px] mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
           <p className="text-center">{emailError}</p>
         </div>
       )}
-      
+
       <div className="max-w-[875px] mx-auto p-6 mt-6">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-blue-600 text-center">Your Train Tickets</h1>
-          <p className="text-center text-gray-600 mt-2">Your journey begins here</p>
+          <h1 className="text-4xl font-bold text-blue-600 text-center">
+            Your Train Tickets
+          </h1>
+          <p className="text-center text-gray-600 mt-2">
+            Your journey begins here
+          </p>
         </div>
 
         {tickets.map((ticket) => (
-          <div 
+          <div
             key={ticket.ticketId}
             className="bg-white shadow-lg rounded-xl p-8 border mb-6 hover:shadow-xl transition-shadow"
           >
@@ -309,14 +332,18 @@ const Ticket = () => {
                     className="w-16 h-16 object-contain"
                   />
                   <div>
-                    <h2 className="text-3xl font-bold text-blue-600">Train Ticket</h2>
-                    <p className="text-gray-600">Ticket ID: {ticket.ticketId}</p>
+                    <h2 className="text-3xl font-bold text-blue-600">
+                      Train Ticket
+                    </h2>
+                    <p className="text-gray-600">
+                      Ticket ID: {ticket.ticketId}
+                    </p>
                   </div>
                 </div>
               </div>
               {qrCodes[ticket.ticketId] && (
-                <img 
-                  src={qrCodes[ticket.ticketId]} 
+                <img
+                  src={qrCodes[ticket.ticketId]}
                   alt="Ticket QR Code"
                   className="w-24 h-24"
                 />
@@ -330,21 +357,30 @@ const Ticket = () => {
                 <Train size={24} className="mx-auto mb-2" />
                 <p className="text-md">Seat Number</p>
                 <p className="text-2xl font-bold">{ticket.seatNumber}</p>
-                <p className="text-md mt-2">Compartment: {ticket.compartment}</p>
+                <p className="text-md mt-2">
+                  Compartment: {ticket.compartment}
+                </p>
               </div>
 
               {/* Passenger and Journey Details */}
               <div className="col-span-2 grid grid-cols-2 gap-4">
-                
                 <div className="bg-green-50 p-4 rounded-lg shadow-sm">
                   <div className="flex items-center gap-2 mb-2">
                     <Calendar size={20} className="text-green-600" />
                     <h3 className="font-semibold text-gray-700">Journey</h3>
                   </div>
-                  <p className="text-gray-800 font-medium">Train: {ticket.trainName}</p>
-                  <p className="text-gray-700 text-base">Travel Date: {ticket.travelDate}</p>
-                  <p className="text-gray-600 text-base">Start: {ticket.startStation}</p>
-                  <p className="text-gray-600 text-base">End: {ticket.endStation}</p>
+                  <p className="text-gray-800 font-medium">
+                    Train: {ticket.trainName}
+                  </p>
+                  <p className="text-gray-700 text-base">
+                    Travel Date: {ticket.travelDate}
+                  </p>
+                  <p className="text-gray-600 text-base">
+                    Start: {ticket.startStation}
+                  </p>
+                  <p className="text-gray-600 text-base">
+                    End: {ticket.endStation}
+                  </p>
                 </div>
 
                 <div className="bg-blue-50 p-4 rounded-lg shadow-sm">
@@ -352,10 +388,13 @@ const Ticket = () => {
                     <User size={20} className="text-blue-600" />
                     <h3 className="font-semibold text-gray-700">Passenger</h3>
                   </div>
-                  <p className="text-gray-600 font-medium">Name: {ticket.passengerName}</p>
-                  <p className="text-gray-600">Booking Date: {ticket.bookingDate}</p>
+                  <p className="text-gray-600 font-medium">
+                    Name: {ticket.passengerName}
+                  </p>
+                  <p className="text-gray-600">
+                    Booking Date: {ticket.bookingDate}
+                  </p>
                 </div>
-
               </div>
             </div>
 
@@ -365,7 +404,7 @@ const Ticket = () => {
                 <CreditCard size={16} />
                 <span>Payment ID: {ticket.paymentId}</span>
               </div>
-              <button 
+              <button
                 onClick={() => downloadSingleTicket(ticket)}
                 className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-sm"
               >

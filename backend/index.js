@@ -12,6 +12,7 @@ const adminAuthRoutes = require("./Routes/admin/adminAuthRoutes");
 const addTrainsRoutes = require("./Routes/admin/addTrainRoutes");
 const userRoutes = require("./Routes/admin/userRoutes");
 const bookingAllRoutes = require("./Routes/admin/bookingAllRoutes");
+const ticketRoutes = require("./Routes/admin/ticketRoutes");
 dotenv.config();
 
 connectDB();
@@ -31,6 +32,7 @@ app.use("/api/adminAuth", adminAuthRoutes);
 app.use("/api/admin", addTrainsRoutes);
 app.use("/api/admin", userRoutes);
 app.use("/api/admin", bookingAllRoutes);
+app.use("/api/admin/bookings", ticketRoutes);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT);
